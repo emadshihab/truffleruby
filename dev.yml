@@ -1,0 +1,16 @@
+name: truffleruby-shopify
+
+up:
+  - homebrew:
+    - openssl
+  - custom:
+      name: Install, but do not link, Homebrew llvm@4, as it conflicts with the system LLVM
+      met?: brew list | grep llvm@4
+      meet: brew install llvm@4
+  - ruby: 2.6.2
+
+commands:
+  jt:
+    syntax:
+      optional: args...
+    run: tool/jt.rb
