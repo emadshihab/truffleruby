@@ -14,6 +14,5 @@ steps:
     artifact_paths:
       - truffle/artifacts
     run:
-      - ls truffle/artifacts
       - cd truffle
       - ./build-linux.sh
