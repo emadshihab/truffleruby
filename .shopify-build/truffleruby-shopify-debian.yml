@@ -1,10 +1,19 @@
 containers:
   default:
-    docker: circleci/ruby:2.5.1-node-browsers
+    includes_source: false
+    environment: build
+    build:
+      env:
+        PIPA_PIPELINE_TEMPLATE: dockerfile
+        PIPA_DOCKERFILE: .shopify-build/Dockerfile.debian
 
 steps:
-- label: Tests
-  timeout: 5m
-  run:
-  - echo "Hello World"
-
+  - label: "Build TruffleRuby on Debian"
+    high_cpu: true
+    timeout: 90m
+    artifact_paths:
+      - truffle/artifacts
+    run:
+      - ls truffle/artifacts
+      - cd truffle
+      - ./build-linux.sh
