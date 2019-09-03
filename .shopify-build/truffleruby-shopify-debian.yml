@@ -1,0 +1,18 @@
+containers:
+  default:
+    includes_source: false
+    environment: build
+    build:
+      env:
+        PIPA_PIPELINE_TEMPLATE: dockerfile
+        PIPA_DOCKERFILE: .shopify-build/Dockerfile.debian
+
+steps:
+  - label: "Build TruffleRuby on Debian"
+    high_cpu: true
+    timeout: 90m
+    artifact_paths:
+      - truffle/artifacts
+    run:
+      - cd truffle
+      - ./build-linux.sh

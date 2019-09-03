@@ -1,0 +1,32 @@
+FROM ubuntu:16.04
+
+RUN apt-get update && apt-get install -y \
+  clang \
+  g++ \
+  gcc \
+  git \
+  libc++-dev \
+  libc++abi-dev \
+  libssl-dev \
+  libz-dev \
+  llvm \
+  locales \
+  make \
+  openjdk-8-jdk \
+  openjdk-8-source \
+  python \
+  ruby \
+  sudo
+
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
+
+WORKDIR /build
+RUN useradd -p '' -ms /bin/bash build
+RUN echo "build ALL=(ALL) ALL" > /etc/sudoers
+RUN chown build /build
+USER build
+
+COPY truffle/build-linux.sh truffle/build-common.sh /build/
+
+CMD ./build-linux.sh
