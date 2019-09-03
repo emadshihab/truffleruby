@@ -2,6 +2,7 @@ containers:
   default:
     includes_source: false
     environment: build
+    workdir: /build/truffleruby-shopify
     build:
       env:
         PIPA_PIPELINE_TEMPLATE: dockerfile
@@ -12,7 +13,7 @@ steps:
     high_cpu: true
     timeout: 90m
     artifact_paths:
-      - truffle/artifacts
+      - /build/artifacts
     run:
-      - cd truffle
+      - cd /build
       - ./build-linux.sh

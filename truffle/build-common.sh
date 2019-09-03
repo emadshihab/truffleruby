@@ -4,7 +4,6 @@
 git clone git@github.com:Shopify/graal-jvmci-8-shopify.git
 git clone git@github.com:Shopify/mx-shopify.git
 git clone git@github.com:Shopify/graal-shopify.git
-git clone git@github.com:Shopify/truffleruby-shopify.git
 
 # Build JDK 8 JVMCI
 pushd graal-jvmci-8-shopify
