@@ -1,10 +1,13 @@
 containers:
   default:
-    docker: circleci/ruby:2.5.1-node-browsers
+    anka: macos-xcode10.3:latest
 
 steps:
-- label: Tests
-  timeout: 5m
+- label: Build TruffleRuby on MacOS
+  timeout: 90m
+  artifact_paths:
+  - truffle/artifacts
   run:
-  - echo "Hello World"
-
+  - brew install openssl llvm@4
+  - cd truffle
+  - ./build-macos.sh
