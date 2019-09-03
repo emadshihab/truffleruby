@@ -5,6 +5,18 @@ git clone git@github.com:Shopify/graal-jvmci-8-shopify.git
 git clone git@github.com:Shopify/mx-shopify.git
 git clone git@github.com:Shopify/graal-shopify.git
 
+# TODO remove this hack for building on specific commits
+pushd graal-shopify
+ruby <<REPLACE
+  target = 'vm/mx.vm/suite.py'
+  content = File.read(target)
+  content.sub!('https://github.com/oracle/truffleruby.git') { 'git@github.com:Shopify/truffleruby-shopify.git' }
+  content.sub!('ac9074beb0ae7df52be2353d3bec788b606e6bea') { ENV['BUILDKITE_COMMIT'] }
+  File.write(target, content)
+REPLACE
+git diff
+popd
+
 # Build JDK 8 JVMCI
 pushd graal-jvmci-8-shopify
 $bootstrap_java_home/bin/java -version

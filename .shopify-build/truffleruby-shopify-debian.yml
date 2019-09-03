@@ -2,7 +2,6 @@ containers:
   default:
     includes_source: false
     environment: build
-    workdir: /build/truffleruby-shopify
     build:
       env:
         PIPA_PIPELINE_TEMPLATE: dockerfile
