@@ -1,0 +1,13 @@
+containers:
+  default:
+    anka: macos-xcode10.3:latest
+
+steps:
+- label: Build TruffleRuby on MacOS
+  timeout: 90m
+  artifact_paths:
+  - truffle/artifacts
+  run:
+  - brew install openssl llvm@4
+  - cd truffle
+  - ./build-macos.sh
