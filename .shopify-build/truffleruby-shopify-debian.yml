@@ -16,3 +16,11 @@ steps:
     run:
       - cd /build
       - ./build-linux.sh
+  - wait
+  - label: Run Ruby specs
+    timeout: 30m
+    import_artifacts:
+    - pattern: '*.tar.gz'
+      into: archive
+    run:
+      - truffle/test-specs.sh
