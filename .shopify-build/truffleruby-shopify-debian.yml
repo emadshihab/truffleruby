@@ -24,3 +24,10 @@ steps:
       into: archive
     run:
       - truffle/test-specs.sh
+  - label: Run Liquid tests
+    timeout: 30m
+    import_artifacts:
+    - pattern: '*.tar.gz'
+      into: archive
+    run:
+      - truffle/test-liquid.sh
