@@ -167,7 +167,7 @@ module Utilities
     if which('mx')
       'mx'
     else
-      mx_repo = find_or_clone_repo('https://github.com/graalvm/mx.git')
+      mx_repo = find_or_clone_repo("https://github.com/Shopify/mx-shopify.git")
       "#{mx_repo}/mx"
     end
   end
