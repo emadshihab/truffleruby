@@ -1,4 +1,4 @@
-# Don't run this directly - see README.md
+# Don't run this directly - it's sourced from build-(linux|macos).sh
 
 # Get sources
 git clone git@github.com:Shopify/graal-jvmci-8-shopify.git
@@ -25,7 +25,9 @@ popd
 jvmci_home=`echo $build_dir/graal-jvmci-8-shopify/openjdk*/*-amd64/product/$home_prefix`
 $jvmci_home/bin/java -version
 
-# This configuration is a combination of truffleruby/mx.truffleruby/native and graal/vm/mx.vm/ce-complete
+# This configuration is a combination of truffleruby/mx.truffleruby/native and
+# graal/vm/mx.vm/ce-complete. It's primarily a native image of Ruby, but
+# including a full JVM and tools for debugging.
 export JAVA_HOME=$jvmci_home
 export DYNAMIC_IMPORTS=/substratevm,/tools,/sulong,truffleruby
 export SKIP_LIBRARIES=native-image-agent
@@ -46,7 +48,11 @@ $product_dir/bin/ruby -v
 # Create the name that we want to call the distribution (the tarball and the directory in it)
 shopify_name=truffleruby-shopify-$platform-$($product_dir/bin/ruby -e 'puts TruffleRuby.revision')
 
-# Make a tarball
+# Make a tarball. What we're going to do is move to the product directory,
+# which includes $home_prefix, then we're going to create a directory with our
+# name and move all files into that. We don't want Contents/Home in macOS, as
+# it does nothing useful unless you're installing as a system Java, which
+# there is very little reason to do with TruffleRuby.
 pushd $product_dir
 files=`ls .`
 mkdir $shopify_name
