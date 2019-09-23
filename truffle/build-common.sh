@@ -36,6 +36,16 @@ DISABLE_INSTALLABLES=true \
 LIBGRAAL=true \
 EXCLUDE_COMPONENTS=nju \
 $build_dir/mx-shopify/mx build
+
+JAVA_HOME=$jvmci_home \
+DYNAMIC_IMPORTS=/substratevm,/tools,/sulong,truffleruby \
+SKIP_LIBRARIES=native-image-agent \
+FORCE_BASH_LAUNCHERS=polyglot,lli,native-image,graalvm-native-clang++,native-image-configure,graalvm-native-clang,gu \
+DISABLE_INSTALLABLES=true \
+LIBGRAAL=true \
+EXCLUDE_COMPONENTS=nju \
+$build_dir/mx-shopify/mx graalvm-home
+
 popd
 
 # This is the name that mx uses for the build directory, automatically made from the configuration
