@@ -1,6 +1,6 @@
 # Updating our version of Ruby
 
-Before you do anything, check with Chris Seaton for clearance to upgrade.
+Before you do anything, check with Benoit Daloze for clearance to upgrade.
 
 The workflow below will allow you to see and reapply the modifications that we
 have to MRI source code while updating.
@@ -87,6 +87,17 @@ To update those, copy the files over from an installed MRI.
 rm -rf lib/gems/specifications/default
 cp -r ~/.rubies/ruby-n.n.n/lib/ruby/gems/n.n.n/specifications/default lib/gems/specifications
 ```
+
+If any of these gemspecs has executables (`s.executables = ...`), then those
+files must be copied under `lib/gems/gems/GEM-VERSION/exe` for `Gem.bin_path` to
+work:
+```
+grep -R executables lib/gems/specifications/default
+cp -R ~/.rubies/ruby-n.n.n/lib/ruby/gems/n.n.n/gems/GEM-VERSION lib/gems/gems
+```
+
+Note: `gem install --default` might help with this, but it does not seem to
+create the executable files currently, even on MRI.
 
 ## Updating bundled gems
 

@@ -9,7 +9,11 @@ suite = {
                 "name": "tools",
                 "subdir": True,
                 # version must always be equal to the version of the "sulong" import below
+<<<<<<< HEAD
                 "version": "081357d4a751d6f60b701442b71d83515c56a6dd",
+=======
+                "version": "7980245f92d00f4b6c38688d46f0a586ec397fde",
+>>>>>>> upstream/master
                 "urls": [
                     {"url": "https://github.com/Shopify/graal-shopify.git", "kind": "git"},
                     {"url": "https://curio.ssw.jku.at/nexus/content/repositories/snapshots", "kind": "binary"},
@@ -19,7 +23,11 @@ suite = {
                 "name": "sulong",
                 "subdir": True,
                 # version must always be equal to the version of the "tools" import above
+<<<<<<< HEAD
                 "version": "081357d4a751d6f60b701442b71d83515c56a6dd",
+=======
+                "version": "7980245f92d00f4b6c38688d46f0a586ec397fde",
+>>>>>>> upstream/master
                 "urls": [
                     {"url": "https://github.com/Shopify/graal-shopify.git", "kind": "git"},
                     {"url": "https://curio.ssw.jku.at/nexus/content/repositories/snapshots", "kind": "binary"},
@@ -122,7 +130,7 @@ suite = {
         "org.truffleruby.annotations": {
             "dir": "src/annotations",
             "sourceDirs": ["java"],
-            "javaCompliance": "1.8",
+            "javaCompliance": "8+",
             "workingSets": "TruffleRuby",
             "checkPackagePrefix": "false",
             "license": ["EPL-1.0"],
@@ -138,7 +146,7 @@ suite = {
             "annotationProcessors": [
                 "TRUFFLERUBY-PROCESSOR",
             ],
-            "javaCompliance": "1.8",
+            "javaCompliance": "8+",
             "workingSets": "TruffleRuby",
             "checkPackagePrefix": "false",
             "license": ["EPL-1.0"],
@@ -150,7 +158,7 @@ suite = {
             "dependencies": [
                 "truffleruby:TRUFFLERUBY-ANNOTATIONS",
             ],
-            "javaCompliance": "1.8",
+            "javaCompliance": "8+",
             "workingSets": "TruffleRuby",
             "checkPackagePrefix": "false",
             "license": ["EPL-1.0"],
@@ -162,7 +170,7 @@ suite = {
             "dependencies": [
                 "sdk:GRAAL_SDK",
             ],
-            "javaCompliance": "1.8",
+            "javaCompliance": "8+",
             "workingSets": "TruffleRuby",
             "checkPackagePrefix": "false",
             "license": ["EPL-1.0"],
@@ -184,7 +192,7 @@ suite = {
                 "truffle:TRUFFLE_DSL_PROCESSOR",
                 "TRUFFLERUBY-PROCESSOR",
             ],
-            "javaCompliance": "1.8",
+            "javaCompliance": "8+",
             "checkstyle": "org.truffleruby",
             "workingSets": "TruffleRuby",
             "findbugsIgnoresGenerated": True,
@@ -200,7 +208,7 @@ suite = {
         "org.truffleruby.ruby": {
             "dir": "src/main/ruby",
             "sourceDirs": ["."],
-            "javaCompliance": "1.8+",
+            "javaCompliance": "8+",
             "license": [
                 "EPL-1.0",          # JRuby (we're choosing EPL out of EPL,GPL,LGPL)
                 "BSD-new",          # Rubinius
@@ -224,7 +232,7 @@ suite = {
                 "sdk:GRAAL_SDK",
                 "sdk:LAUNCHER_COMMON",
             ],
-            "javaCompliance": "1.8",
+            "javaCompliance": "8+",
             "workingSets": "TruffleRuby",
             "checkPackagePrefix": "false",
             "license": ["EPL-1.0"],
@@ -238,7 +246,7 @@ suite = {
                 "org.truffleruby.services",
                 "mx:JUNIT",
             ],
-            "javaCompliance": "1.8",
+            "javaCompliance": "8+",
             "checkPackagePrefix": "false",
             "license": ["EPL-1.0"],
         },
@@ -248,7 +256,7 @@ suite = {
             "dir": "src/tck",
             "sourceDirs": ["java", "ruby"],
             "dependencies": ["truffle:TRUFFLE_TCK"],
-            "javaCompliance": "1.8",
+            "javaCompliance": "8+",
             "license": ["EPL-1.0"],
         },
 
@@ -327,6 +335,10 @@ suite = {
         },
 
         "TRUFFLERUBY-SERVICES": {
+            "moduleInfo": {
+                "name": "org.truffleruby.services",
+                "exports": ["org.truffleruby.services.scriptengine"],
+            },
             "dependencies": [
                 "org.truffleruby.services"
             ],
@@ -406,6 +418,7 @@ suite = {
                 ],
                 "lib/": [
                     "file:lib/json",
+                    "file:lib/gems",
                     "file:lib/mri",
                     "file:lib/patches",
                     "file:lib/truffle",
@@ -439,28 +452,6 @@ suite = {
                 ],
                 "lib/mri/rbconfig/": [
                     "dependency:org.truffleruby.cext/src/main/c/rbconfig-sizeof/sizeof.su",
-                ],
-                "lib/gems/": [
-                    "file:lib/gems/truffleruby_gem_dir_marker.txt",
-                ],
-                "lib/gems/gems/": [
-                    "file:lib/gems/gems/did_you_mean-1.3.0",
-                    "file:lib/gems/gems/minitest-5.11.3",
-                    "file:lib/gems/gems/net-telnet-0.2.0",
-                    "file:lib/gems/gems/power_assert-1.1.3",
-                    "file:lib/gems/gems/rake-12.3.2",
-                    "file:lib/gems/gems/test-unit-3.2.9",
-                    "file:lib/gems/gems/xmlrpc-0.3.0",
-                ],
-                "lib/gems/specifications/": [
-                    "file:lib/gems/specifications/default",
-                    "file:lib/gems/specifications/did_you_mean-1.3.0.gemspec",
-                    "file:lib/gems/specifications/minitest-5.11.3.gemspec",
-                    "file:lib/gems/specifications/net-telnet-0.2.0.gemspec",
-                    "file:lib/gems/specifications/power_assert-1.1.3.gemspec",
-                    "file:lib/gems/specifications/rake-12.3.2.gemspec",
-                    "file:lib/gems/specifications/test-unit-3.2.9.gemspec",
-                    "file:lib/gems/specifications/xmlrpc-0.3.0.gemspec",
                 ],
                 "lib/truffle/": [
                     "dependency:org.truffleruby.cext/src/main/c/spawn-helper/spawn-helper",

@@ -1,4 +1,7 @@
-root = File.expand_path File.join __dir__, ".."
+# Delete all new lines from annotations so they can be formatted
+# properly by the eclipse code formatter
+
+root = File.expand_path File.join __dir__, "..", ".."
 
 def braces(line)
   line.scan('(').size - line.scan(')').size
@@ -28,11 +31,11 @@ Dir.glob(File.join(root, "src", "**", "*.java")) do |file|
       else
         braces += braces(line)
         # p specialization: line, braces: braces
-        new_content << line
+        new_content << line.chomp << " "
       end
     else
       looking = line.match?(/^ *@(Specialization|Fallback|CreateCast)/)
-      new_content << line
+      new_content << (looking ? (line.chomp + " ") : line)
       if looking
         braces = braces(line)
         # p specialization: line, braces: braces
