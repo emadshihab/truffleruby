@@ -5,7 +5,10 @@ git clone git@github.com:Shopify/graal-jvmci-8-shopify.git
 git clone git@github.com:Shopify/mx-shopify.git
 git clone git@github.com:Shopify/graal-shopify.git
 
-# TODO remove this hack for building on specific commits
+# GraalVM refers to a particular version of TruffleRuby, and will reset the
+# repository to that commit. We need to modify the version it refers to, to the
+# version we wanted to be building.
+
 pushd graal-shopify
 ruby <<REPLACE
   target = 'vm/mx.vm/suite.py'

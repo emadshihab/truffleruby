@@ -16,23 +16,56 @@ steps:
     artifact_paths:
     - .shopify-build/artifacts
     run:
-    - brew install openssl llvm@4
-    - cd .shopify-build
-    - ./build-macos.sh
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/build-macos.sh
   - wait
-  - label: Run Ruby specs
+  - label: Run Ruby language, command-line, and security specs
     timeout: 30m
     import_artifacts:
     - pattern: '*.tar.gz'
       into: archive
     run:
-      - .shopify-build/test-specs.sh
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-specs.sh :language :command_line :security
+  - label: Run Ruby core specs
+    timeout: 30m
+    import_artifacts:
+    - pattern: '*.tar.gz'
+      into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-specs.sh :core
+  - label: Run Ruby library specs
+    timeout: 30m
+    import_artifacts:
+    - pattern: '*.tar.gz'
+      into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-specs.sh :library :library_cext
+  - label: Run Ruby C extension specs
+    timeout: 30m
+    import_artifacts:
+    - pattern: '*.tar.gz'
+      into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-specs.sh :capi
+  - label: Run Truffle specs
+    timeout: 30m
+    import_artifacts:
+    - pattern: '*.tar.gz'
+      into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-specs.sh :truffle :truffle_capi
   - label: Run Liquid tests
     timeout: 30m
     import_artifacts:
     - pattern: '*.tar.gz'
       into: archive
     run:
+      - .shopify-build/setup-macos.sh
       - .shopify-build/test-liquid.sh
   - block: "Release to dev"
   - label: Upload to S3 and send PR to Shopify/dev
