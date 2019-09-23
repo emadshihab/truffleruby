@@ -3,6 +3,7 @@ containers:
     includes_source: false
     environment: build
     build:
+      tag_using_path: .shopify-build/Dockerfile.debian
       env:
         PIPA_PIPELINE_TEMPLATE: dockerfile
         PIPA_DOCKERFILE: .shopify-build/Dockerfile.debian
@@ -14,8 +15,7 @@ steps:
     artifact_paths:
       - /build/artifacts
     run:
-      - cd /build
-      - ./build-linux.sh
+      - truffle/build-linux.sh
   - wait
   - label: Run Ruby specs
     timeout: 30m

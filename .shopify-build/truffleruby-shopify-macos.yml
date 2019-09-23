@@ -5,6 +5,7 @@ containers:
     environment: upload
     includes_source: false
     build:
+      tag_using_path: .shopify-build/Dockerfile.upload
       env:
         PIPA_PIPELINE_TEMPLATE: dockerfile
         PIPA_DOCKERFILE: .shopify-build/Dockerfile.upload

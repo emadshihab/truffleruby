@@ -27,6 +27,4 @@ RUN echo "build ALL=(ALL) ALL" > /etc/sudoers
 RUN chown build /build
 USER build
 
-COPY truffle/build-linux.sh truffle/build-common.sh /build/
-
 CMD ./build-linux.sh
