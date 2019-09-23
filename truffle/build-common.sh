@@ -41,14 +41,14 @@ product_dir=`$build_dir/mx-shopify/mx graalvm-home`
 popd
 
 # Check we can actually at least run TruffleRuby
-$product_dir/$home_prefix/bin/ruby -v
+$product_dir/bin/ruby -v
 
 # Create the name that we want to call the distribution (the tarball and the directory in it)
-shopify_name=truffleruby-shopify-$platform-$($product_dir/$home_prefix/bin/ruby -e 'puts TruffleRuby.revision')
+shopify_name=truffleruby-shopify-$platform-$($product_dir/bin/ruby -e 'puts TruffleRuby.revision')
 
 # Make a tarball
 pushd $product_dir/..
-mv graalvm-*/$home_prefix $shopify_name
+mv * $shopify_name
 tar -zcf $build_dir/$shopify_name.tar.gz $shopify_name
 popd
 
