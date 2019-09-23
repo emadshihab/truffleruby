@@ -47,8 +47,10 @@ $product_dir/bin/ruby -v
 shopify_name=truffleruby-shopify-$platform-$($product_dir/bin/ruby -e 'puts TruffleRuby.revision')
 
 # Make a tarball
-pushd $product_dir/..
-mv * $shopify_name
+pushd $product_dir
+files=`ls .`
+mkdir $shopify_name
+mv $files $shopify_name
 tar -zcf $build_dir/$shopify_name.tar.gz $shopify_name
 popd
 
