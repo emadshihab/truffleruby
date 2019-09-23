@@ -1,0 +1,1 @@
+fails:Gem.bin_path finds executables of default gems, which are the only files shipped for default gems
