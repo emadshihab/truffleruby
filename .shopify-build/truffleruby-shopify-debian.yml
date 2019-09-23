@@ -15,8 +15,7 @@ steps:
     artifact_paths:
       - /build/artifacts
     run:
-      - cd /build
-      - ./build-linux.sh
+      - truffle/build-linux.sh
   - wait
   - label: Run Ruby specs
     timeout: 30m
