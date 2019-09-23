@@ -26,13 +26,13 @@ jvmci_home=`echo $build_dir/graal-jvmci-8-shopify/openjdk*/*-amd64/product/$home
 $jvmci_home/bin/java -version
 
 # This configuration is a combination of truffleruby/mx.truffleruby/native and graal/vm/mx.vm/ce-complete
-configuration=JAVA_HOME=$jvmci_home \
+configuration="JAVA_HOME=$jvmci_home \
 DYNAMIC_IMPORTS=/substratevm,/tools,/sulong,truffleruby \
 SKIP_LIBRARIES=native-image-agent \
 FORCE_BASH_LAUNCHERS=polyglot,lli,native-image,graalvm-native-clang++,native-image-configure,graalvm-native-clang,gu \
 DISABLE_INSTALLABLES=true \
 LIBGRAAL=true \
-EXCLUDE_COMPONENTS=nju
+EXCLUDE_COMPONENTS=nju"
 
 # Build GraalVM
 pushd graal-shopify/vm
