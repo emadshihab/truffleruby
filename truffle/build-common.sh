@@ -26,28 +26,28 @@ jvmci_home=`echo $build_dir/graal-jvmci-8-shopify/openjdk*/*-amd64/product/$home
 $jvmci_home/bin/java -version
 
 # This configuration is a combination of truffleruby/mx.truffleruby/native and graal/vm/mx.vm/ce-complete
-configuration="JAVA_HOME=$jvmci_home \
-DYNAMIC_IMPORTS=/substratevm,/tools,/sulong,truffleruby \
-SKIP_LIBRARIES=native-image-agent \
-FORCE_BASH_LAUNCHERS=polyglot,lli,native-image,graalvm-native-clang++,native-image-configure,graalvm-native-clang,gu \
-DISABLE_INSTALLABLES=true \
-LIBGRAAL=true \
-EXCLUDE_COMPONENTS=nju"
+export JAVA_HOME=$jvmci_home
+export DYNAMIC_IMPORTS=/substratevm,/tools,/sulong,truffleruby
+export SKIP_LIBRARIES=native-image-agent
+export FORCE_BASH_LAUNCHERS=polyglot,lli,native-image,graalvm-native-clang++,native-image-configure,graalvm-native-clang,gu
+export DISABLE_INSTALLABLES=true
+export LIBGRAAL=true
+export EXCLUDE_COMPONENTS=nju
 
 # Build GraalVM
 pushd graal-shopify/vm
-$configuration $build_dir/mx-shopify/mx build
-built_dir=`$configuration $build_dir/mx-shopify/mx graalvm-home`
+$build_dir/mx-shopify/mx build
+product_dir=`$build_dir/mx-shopify/mx graalvm-home`
 popd
 
 # Check we can actually at least run TruffleRuby
-$built_dir/$home_prefix/bin/ruby -v
+$product_dir/$home_prefix/bin/ruby -v
 
 # Create the name that we want to call the distribution (the tarball and the directory in it)
-shopify_name=truffleruby-shopify-$platform-$($built_dir/$home_prefix/bin/ruby -e 'puts TruffleRuby.revision')
+shopify_name=truffleruby-shopify-$platform-$($product_dir/$home_prefix/bin/ruby -e 'puts TruffleRuby.revision')
 
 # Make a tarball
-pushd $built_dir/..
+pushd $product_dir/..
 mv graalvm-*/$home_prefix $shopify_name
 tar -zcf $build_dir/$shopify_name.tar.gz $shopify_name
 popd
