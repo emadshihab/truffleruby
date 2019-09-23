@@ -9,7 +9,7 @@ containers:
 
 steps:
   - label: "Build TruffleRuby on Debian"
-    high_cpu: true
+    high_concurrency: true
     timeout: 90m
     artifact_paths:
       - /build/artifacts
