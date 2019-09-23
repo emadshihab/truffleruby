@@ -15,7 +15,7 @@ steps:
     artifact_paths:
       - /build/artifacts
     run:
-      - truffle/build-linux.sh
+      - .shopify-build/build-linux.sh
   - wait
   - label: Run Ruby specs
     timeout: 30m
@@ -23,11 +23,11 @@ steps:
     - pattern: '*.tar.gz'
       into: archive
     run:
-      - truffle/test-specs.sh
+      - .shopify-build/test-specs.sh
   - label: Run Liquid tests
     timeout: 30m
     import_artifacts:
     - pattern: '*.tar.gz'
       into: archive
     run:
-      - truffle/test-liquid.sh
+      - .shopify-build/test-liquid.sh

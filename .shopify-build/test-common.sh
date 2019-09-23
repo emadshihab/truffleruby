@@ -1,4 +1,4 @@
-# Don't run this directly
+# Don't run this directly - see README.md
 
 unset GEM_HOME GEM_PATH GEM_ROOT RUBY_ENGINE RUBY_ROOT RUBY_VERSION
 

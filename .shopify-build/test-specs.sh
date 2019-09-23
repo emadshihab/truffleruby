@@ -3,7 +3,7 @@
 set -x
 set -e
 
-source truffle/test-common.sh
+source .shopify-build/test-common.sh
 
 # We'd like to run all specs (remove --excl-tag slow) but can't due
 # to https://github.com/oracle/truffleruby/issues/1746

@@ -14,10 +14,10 @@ steps:
   - label: Build TruffleRuby on MacOS
     timeout: 90m
     artifact_paths:
-    - truffle/artifacts
+    - .shopify-build/artifacts
     run:
     - brew install openssl llvm@4
-    - cd truffle
+    - cd .shopify-build
     - ./build-macos.sh
   - wait
   - label: Run Ruby specs
@@ -26,14 +26,14 @@ steps:
     - pattern: '*.tar.gz'
       into: archive
     run:
-      - truffle/test-specs.sh
+      - .shopify-build/test-specs.sh
   - label: Run Liquid tests
     timeout: 30m
     import_artifacts:
     - pattern: '*.tar.gz'
       into: archive
     run:
-      - truffle/test-liquid.sh
+      - .shopify-build/test-liquid.sh
   - block: "Release to dev"
   - label: Upload to S3 and send PR to Shopify/dev
     timeout: 30m
