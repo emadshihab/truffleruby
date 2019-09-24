@@ -24,8 +24,17 @@ REPLACE
 git diff
 popd
 
+# The version of JVMCI is in ci.jsonnet but it's a bit tricky to get it out - may break in the future
+
+jvmci_tag=$(ruby <<JVMCI
+  File.read('$shopify_build_path/../ci.jsonnet') =~ /version: "\du\d+-(jvmci-\d+(\.\d+)-b\d+)"/
+  puts \$1
+JVMCI
+)
+
 # Build JDK 8 JVMCI
 pushd graal-jvmci-8-shopify
+git checkout $jvmci_tag
 $bootstrap_java_home/bin/java -version
 JAVA_HOME=$bootstrap_java_home $build_dir/mx-shopify/mx build
 popd
