@@ -14,53 +14,86 @@ steps:
   - label: Build TruffleRuby on MacOS
     timeout: 90m
     artifact_paths:
-    - truffle/artifacts
+      - .shopify-build/artifacts
     run:
-    - brew install openssl llvm@4
-    - cd truffle
-    - ./build-macos.sh
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/build-macos.sh
   - wait
-  - label: Run Ruby specs
+  - label: Run Ruby language, command-line, and security specs
     timeout: 30m
     import_artifacts:
-    - pattern: '*.tar.gz'
-      into: archive
+      - pattern: '*.tar.gz'
+        into: archive
     run:
-      - truffle/test-specs.sh
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-specs.sh :language :command_line :security
+  - label: Run Ruby core specs
+    timeout: 30m
+    import_artifacts:
+      - pattern: '*.tar.gz'
+        into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-specs.sh :core
+  - label: Run Ruby library specs
+    timeout: 30m
+    import_artifacts:
+      - pattern: '*.tar.gz'
+        into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-specs.sh :library :library_cext
+  - label: Run Ruby C extension specs
+    timeout: 30m
+    import_artifacts:
+      - pattern: '*.tar.gz'
+        into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-specs.sh :capi
+  - label: Run Truffle specs
+    timeout: 30m
+    import_artifacts:
+      - pattern: '*.tar.gz'
+        into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-specs.sh :truffle :truffle_capi
   - label: Run Liquid tests
     timeout: 30m
     import_artifacts:
-    - pattern: '*.tar.gz'
-      into: archive
+      - pattern: '*.tar.gz'
+        into: archive
     run:
-      - truffle/test-liquid.sh
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-liquid.sh
   - block: "Release to dev"
   - label: Upload to S3 and send PR to Shopify/dev
     timeout: 30m
     container: upload
     import_artifacts:
-    - pattern: 'truffleruby*.tar.gz'
-      into: rubies
+      - pattern: 'truffleruby*.tar.gz'
+        into: rubies
     run:
-    - |
-      bash <<'EOS'
-        set -ex
+      - |
+        bash <<'EOS'
+          set -ex
 
-        # massage the archive into a form dev likes
-        cd rubies
-        dir_path=$(echo ./*.tar.gz | sed 's/.tar.gz//')
-        version=$(echo ./*.tar.gz | sed -E 's/.*-macos-(.*)\.tar\.gz/\1/')
-        output_tar="truffleruby-$version.tgz"
+          # massage the archive into a form dev likes
+          cd rubies
+          dir_path=$(echo ./*.tar.gz | sed 's/.tar.gz//')
+          version=$(echo ./*.tar.gz | sed -E 's/.*-macos-(.*)\.tar\.gz/\1/')
+          output_tar="truffleruby-$version.tgz"
 
-        tar -xf "$dir_path.tar.gz"
+          tar -xf "$dir_path.tar.gz"
 
-        cd "$dir_path"
-        tar -czf "../$output_tar" $(ls)
-      EOS
-    - git clone git@github.com:Shopify/ruby-builder.git
-    - mkdir ruby-builder/rubies
-    - mv rubies/truffleruby*.tgz ruby-builder/rubies/
-    - cd ruby-builder
-    - gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)"
-    - bundle install --without test --without development
-    - bundle exec ruby bin/upload_bins_for_dev
+          cd "$dir_path"
+          tar -czf "../$output_tar" $(ls)
+        EOS
+      - git clone git@github.com:Shopify/ruby-builder.git
+      - mkdir ruby-builder/rubies
+      - mv rubies/truffleruby*.tgz ruby-builder/rubies/
+      - cd ruby-builder
+      - gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)"
+      - bundle install --without test --without development
+      - bundle exec ruby bin/upload_bins_for_dev
