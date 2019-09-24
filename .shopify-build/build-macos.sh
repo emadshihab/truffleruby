@@ -6,8 +6,8 @@ set -e
 home_prefix=Contents/Home
 platform=macos
 
-repo_dir=$PWD
-build_dir=$repo_dir/$(mktemp -d temp-build-XXXXXXXXXX)
+shopify_build_path=$PWD/.shopify-build
+build_dir=$PWD/$(mktemp -d temp-build-XXXXXXXXXX)
 
 pushd $build_dir
 
@@ -18,10 +18,10 @@ curl -OL https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk
 tar -zxf OpenJDK8U-jdk_x64_mac_hotspot_8u222b10.tar.gz
 bootstrap_java_home=$build_dir/jdk8u222-b10/Contents/Home
 
-source $repo_dir/.shopify-build/build-common.sh
+source $shopify_build_path/build-common.sh
 
-mkdir -p $repo_dir/.shopify-build/artifacts
-cp $shopify_name.tar.gz $shopify_name.tar.gz.sha256 $repo_dir/.shopify-build/artifacts
+mkdir -p $shopify_build_path/artifacts
+cp $shopify_name.tar.gz $shopify_name.tar.gz.sha256 $shopify_build_path/artifacts
 
 popd $build_dir
 rm -rf $build_dir
