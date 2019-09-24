@@ -58,3 +58,13 @@ fails:Public methods on String should not include shorten!
 fails:Public methods on String should not include substring
 fails:Public methods on String should not include to_sub_replacement
 fails:Public methods on ENV.singleton_class should include slice
+fails:Public methods on Module should include ==
+fails:Public methods on Module should include freeze
+fails:Public methods on Integer should include remainder
+fails:Public methods on Array should include any?
+fails:Public methods on Array should include drop_while
+fails:Public methods on Array should include max
+fails:Public methods on Array should include min
+fails:Public methods on Array should include sum
+fails:Public methods on Array should include take
+fails:Public methods on Array should include take_while
