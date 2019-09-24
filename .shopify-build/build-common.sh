@@ -13,8 +13,12 @@ pushd graal-shopify
 ruby <<REPLACE
   target = 'vm/mx.vm/suite.py'
   content = File.read(target)
-  content.sub!('https://github.com/oracle/truffleruby.git') { 'git@github.com:Shopify/truffleruby-shopify.git' }
-  content.sub!('ac9074beb0ae7df52be2353d3bec788b606e6bea') { ENV['BUILDKITE_COMMIT'] }
+  current_commit = ENV['BUILDKITE_COMMIT']
+  current_repo = 'git@github.com:Shopify/truffleruby-shopify.git'
+
+  content.sub!('https://github.com/oracle/truffleruby.git') { current_repo }
+  content.sub!('1970686ee677bcf2d08c34371d1673f56cd96b3e') { current_commit }
+  raise "replacement failed" unless content.include?(current_commit) && content.include?(current_repo)
   File.write(target, content)
 REPLACE
 git diff
