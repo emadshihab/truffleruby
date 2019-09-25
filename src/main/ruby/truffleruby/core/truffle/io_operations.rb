@@ -80,11 +80,13 @@ module Truffle
         Errno.handle if r == -1
 
       elsif Truffle::POSIX.respond_to?(:dup3)
+        require 'fcntl'
         # Atomically dupe and set close-on-exec if supported by the platform.
         r = Truffle::POSIX.dup3(old_fd, new_fd, Fcntl::O_CLOEXEC)
         Errno.handle if r == -1
 
       else
+        require 'fcntl'
         # Dupe and set close-on-exec in two operations if it can't be done atomically.
         r = Truffle::POSIX.dup2(old_fd, new_fd)
         Errno.handle if r == -1
