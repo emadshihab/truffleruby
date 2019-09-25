@@ -478,7 +478,7 @@ public abstract class RegexpNodes {
                         "isInitialized(regexp)",
                         "isRubyString(string)",
                         "isValidEncoding(string, rangeNode)",
-                        "isRubyEncoding(isCompatibleNode.executeCompatibleQuery(regexp, string))" })
+                        "!isNil(isCompatibleNode.executeCompatibleQuery(regexp, string))" })
         protected Object searchRegion(DynamicObject regexp, DynamicObject string, int start, int end, boolean forward,
                 @Cached("createBinaryProfile()") ConditionProfile forwardSearchProfile,
                 @Cached RopeNodes.BytesNode bytesNode,
