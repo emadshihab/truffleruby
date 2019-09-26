@@ -371,6 +371,10 @@ public abstract class EncodingNodes {
         @Child private NegotiateCompatibleEncodingNode negotiateCompatibleEncodingNode = NegotiateCompatibleEncodingNode
                 .create();
 
+        public static CompatibleQueryNode create() {
+            return EncodingNodesFactory.CompatibleQueryNodeFactory.create(null);
+        }
+
         public abstract DynamicObject executeCompatibleQuery(Object first, Object second);
 
         @Specialization
@@ -656,8 +660,15 @@ public abstract class EncodingNodes {
         }
 
         @Specialization(guards = "isRubyRegexp(regexp)")
-        protected DynamicObject encodingGetObjectEncodingRegexp(DynamicObject regexp) {
-            return getRubyEncodingNode.executeGetRubyEncoding(Layouts.REGEXP.getSource(regexp).getEncoding());
+        protected DynamicObject encodingGetObjectEncodingRegexp(DynamicObject regexp,
+                @Cached("createBinaryProfile()") ConditionProfile hasRegexpSource) {
+            final Rope regexpSource = Layouts.REGEXP.getSource(regexp);
+
+            if (hasRegexpSource.profile(regexpSource == null)) {
+                return getRubyEncodingNode.executeGetRubyEncoding(EncodingManager.getEncoding("BINARY"));
+            } else {
+                return getRubyEncodingNode.executeGetRubyEncoding(regexpSource.getEncoding());
+            }
         }
 
         @Specialization(
