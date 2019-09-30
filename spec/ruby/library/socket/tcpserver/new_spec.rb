@@ -80,6 +80,23 @@ describe "TCPServer.new" do
     # pick such a service port that will be able to reliably bind...
   end
 
+  it "has a single argument form and treats it as a port number" do
+    @server = TCPServer.new(0)
+    addr = @server.addr
+    addr[1].should be_kind_of(Integer)
+  end
+
+  it "coerces port to a string when it is the only argument" do
+    -> { TCPServer.new(Object.new) }.should raise_error(TypeError)
+
+    port = Object.new
+    port.should_receive(:to_str).and_return("0")
+
+    @server = TCPServer.new(port)
+    addr = @server.addr
+    addr[1].should be_kind_of(Integer)
+  end
+
   it "raises Errno::EADDRNOTAVAIL when the address is unknown" do
     -> { TCPServer.new("1.2.3.4", 0) }.should raise_error(Errno::EADDRNOTAVAIL)
   end
