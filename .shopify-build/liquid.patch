@@ -1,0 +1,13 @@
+diff --git a/Gemfile b/Gemfile
+index f520934..ae93742 100644
+--- a/Gemfile
++++ b/Gemfile
+@@ -20,8 +20,4 @@ end
+ group :test do
+   gem 'rubocop', '~> 0.74.0', require: false
+   gem 'rubocop-performance', require: false
+-
+-  platform :mri, :truffleruby do
+-    gem 'liquid-c', github: 'Shopify/liquid-c', ref: 'master'
+-  end
+ end
