@@ -9,12 +9,14 @@
  */
 package org.truffleruby.core.cast;
 
+import org.truffleruby.core.array.ArrayStrategy;
 import org.truffleruby.language.RubyGuards;
 import org.truffleruby.language.RubyNode;
 import org.truffleruby.language.control.RaiseException;
 import org.truffleruby.language.dispatch.CallDispatchHeadNode;
 import org.truffleruby.language.dispatch.DispatchNode;
 
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.dsl.Cached;
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
@@ -76,7 +78,7 @@ public abstract class ArrayCastNode extends RubyNode {
     protected Object cast(Object nil) {
         switch (nilBehavior) {
             case EMPTY_ARRAY:
-                return createArray(null, 0);
+                return createArray(ArrayStrategy.NULL_ARRAY_STORE, 0);
 
             case ARRAY_WITH_NIL:
                 return createArray(new Object[]{ nil() }, 1);
@@ -85,6 +87,7 @@ public abstract class ArrayCastNode extends RubyNode {
                 return nil;
 
             default: {
+                CompilerDirectives.transferToInterpreterAndInvalidate();
                 throw new UnsupportedOperationException();
             }
         }
