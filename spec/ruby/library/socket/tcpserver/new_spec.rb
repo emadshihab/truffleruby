@@ -48,6 +48,24 @@ describe "TCPServer.new" do
     addr[3].should == '0.0.0.0'
   end
 
+  it "binds to a port if the port is explicitly nil" do
+    @server = TCPServer.new('', nil)
+    addr = @server.addr
+    addr[0].should == 'AF_INET'
+    addr[1].should be_kind_of(Integer)
+    addr[2].should == '0.0.0.0'
+    addr[3].should == '0.0.0.0'
+  end
+
+  it "binds to a port if the port is an empty string" do
+    @server = TCPServer.new('', '')
+    addr = @server.addr
+    addr[0].should == 'AF_INET'
+    addr[1].should be_kind_of(Integer)
+    addr[2].should == '0.0.0.0'
+    addr[3].should == '0.0.0.0'
+  end
+
   it "coerces port to string, then determines port from that number or service name" do
     -> { TCPServer.new(SocketSpecs.hostname, Object.new) }.should raise_error(TypeError)
 

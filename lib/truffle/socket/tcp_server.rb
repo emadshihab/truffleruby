@@ -25,15 +25,17 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class TCPServer < TCPSocket
-  def initialize(host, service = nil)
+  NOT_PASSED = Object.new
+
+  def initialize(host, service = NOT_PASSED)
     @no_reverse_lookup = self.class.do_not_reverse_lookup
 
-    if host.is_a?(Integer) and service.nil?
+    if host.is_a?(Integer) and NOT_PASSED.equal?(service)
       service = host
       host    = nil
     end
 
-    if host.is_a?(String) and service.nil?
+    if host.is_a?(String) and NOT_PASSED.equal?(service)
       begin
         service = Integer(host)
       rescue ArgumentError
@@ -41,6 +43,10 @@ class TCPServer < TCPSocket
       end
 
       host = nil
+    end
+
+    if service.nil? && !NOT_PASSED.equal?(service)
+      service = 0
     end
 
     unless service.is_a?(Integer)
