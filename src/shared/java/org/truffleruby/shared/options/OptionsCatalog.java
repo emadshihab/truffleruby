@@ -68,6 +68,7 @@ public class OptionsCatalog {
     public static final OptionKey<Boolean> BACKTRACE_ON_RESCUE_KEY = new OptionKey<>(false);
     public static final OptionKey<Boolean> CEXTS_KEY = new OptionKey<>(true);
     public static final OptionKey<Boolean> CEXT_LOCK_KEY = new OptionKey<>(true);
+    public static final OptionKey<Boolean> CEXTS_KEEP_HANDLES_ALIVE_KEY = new OptionKey<>(true);
     public static final OptionKey<Boolean> OPTIONS_LOG_KEY = new OptionKey<>(false);
     public static final OptionKey<Boolean> LOG_LOAD_KEY = new OptionKey<>(false);
     public static final OptionKey<Boolean> LOG_AUTOLOAD_KEY = new OptionKey<>(false);
@@ -474,6 +475,13 @@ public class OptionsCatalog {
     public static final OptionDescriptor CEXT_LOCK = OptionDescriptor
             .newBuilder(CEXT_LOCK_KEY, "ruby.cexts-lock")
             .help("Use a Global Lock when running C extensions")
+            .category(OptionCategory.EXPERT)
+            .stability(OptionStability.EXPERIMENTAL)
+            .build();
+
+    public static final OptionDescriptor CEXTS_KEEP_HANDLES_ALIVE = OptionDescriptor
+            .newBuilder(CEXTS_KEEP_HANDLES_ALIVE_KEY, "ruby.keep-handles-alive")
+            .help("Keep handles for value wrappers alive forever")
             .category(OptionCategory.EXPERT)
             .stability(OptionStability.EXPERIMENTAL)
             .build();
@@ -1087,6 +1095,8 @@ public class OptionsCatalog {
                 return CEXTS;
             case "ruby.cexts-lock":
                 return CEXT_LOCK;
+            case "ruby.keep-handles-alive":
+                return CEXTS_KEEP_HANDLES_ALIVE;
             case "ruby.options-log":
                 return OPTIONS_LOG;
             case "ruby.log-load":
@@ -1288,6 +1298,7 @@ public class OptionsCatalog {
             BACKTRACE_ON_RESCUE,
             CEXTS,
             CEXT_LOCK,
+            CEXTS_KEEP_HANDLES_ALIVE,
             OPTIONS_LOG,
             LOG_LOAD,
             LOG_AUTOLOAD,
