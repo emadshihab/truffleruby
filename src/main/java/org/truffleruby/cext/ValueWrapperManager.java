@@ -10,6 +10,8 @@
 package org.truffleruby.cext;
 
 import java.lang.ref.WeakReference;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.truffleruby.RubyContext;
 import org.truffleruby.RubyLanguage;
@@ -191,11 +193,20 @@ public class ValueWrapperManager {
 
     protected static class HandleBlock {
 
+        private static final Set<HandleBlock> keepAlive = new HashSet<>();
+
         private final long base;
         @SuppressWarnings("rawtypes") private final ValueWrapper[] wrappers;
         private int count;
 
-        public HandleBlock() {
+        private static void keepAlive(HandleBlock block) {
+            keepAlive.add(block);
+        }
+
+        public HandleBlock(RubyContext context) {
+            if (context.getOptions().CEXTS_KEEP_HANDLES_ALIVE) {
+                keepAlive(this);
+            }
             base = allocator.getFreeBlock();
             wrappers = new ValueWrapper[BLOCK_SIZE];
             count = 0;
@@ -243,8 +254,8 @@ public class ValueWrapperManager {
             return holder.handleBlock;
         }
 
-        public HandleBlock makeNewBlock() {
-            return (holder.handleBlock = new HandleBlock());
+        public HandleBlock makeNewBlock(RubyContext context) {
+            return (holder.handleBlock = new HandleBlock(context));
         }
     }
 
@@ -295,7 +306,7 @@ public class ValueWrapperManager {
                 if (block != null) {
                     context.getMarkingService().queueForMarking(block.wrappers);
                 }
-                block = threadData.makeNewBlock();
+                block = threadData.makeNewBlock(context);
                 context.getValueWrapperManager().addToBlockMap(block);
             }
             return block.setHandleOnWrapper(wrapper);
