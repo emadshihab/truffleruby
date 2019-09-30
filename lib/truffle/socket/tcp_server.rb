@@ -25,23 +25,28 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class TCPServer < TCPSocket
-  def initialize(host, service = nil)
+  NOT_PASSED = Object.new
+
+  def initialize(host, service = NOT_PASSED)
     @no_reverse_lookup = self.class.do_not_reverse_lookup
 
-    if host.is_a?(Integer) and service.nil?
-      service = host
-      host    = nil
-    end
-
-    if host.is_a?(String) and service.nil?
-      begin
-        service = Integer(host)
-      rescue ArgumentError
-        raise SocketError, "invalid port number: #{host}"
-      end
+    if NOT_PASSED.equal?(service)
+      service =
+        if host.is_a?(Integer)
+          host
+        else
+          string_service = Truffle::Socket.coerce_to_string(host)
+          begin
+            Integer(string_service)
+          rescue ArgumentError
+            raise SocketError, "invalid port number: #{host}"
+          end
+        end
 
       host = nil
     end
+
+    service = 0 if service.nil?
 
     unless service.is_a?(Integer)
       service = Truffle::Socket.coerce_to_string(service)
