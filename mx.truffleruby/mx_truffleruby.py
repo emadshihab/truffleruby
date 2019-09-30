@@ -102,6 +102,7 @@ mx_sdk.register_graalvm_component(mx_sdk.GraalVmLanguage(
     dir_name='ruby',
     license_files=['LICENSE_TRUFFLERUBY.txt'],
     third_party_license_files=['3rd_party_licenses_truffleruby.txt'],
+    dependencies=[],
     truffle_jars=[],
     support_distributions=[
         'truffleruby:TRUFFLERUBY_GRAALVM_LICENSES',
@@ -117,6 +118,7 @@ mx_sdk.register_graalvm_component(mx_sdk.GraalVmLanguage(
     standalone_dir_name='truffleruby-<version>-<graalvm_os>-<arch>',
     license_files=[],
     third_party_license_files=[],
+    dependencies=['rbyl', 'Truffle', 'Truffle NFI', 'Sulong', 'GraalVM Chrome Inspector', 'GraalVM Profiler', 'VisualVM'],
     truffle_jars=[
         'truffleruby:TRUFFLERUBY',
         'truffleruby:TRUFFLERUBY-SHARED',
@@ -156,7 +158,7 @@ The Ruby openssl C extension needs to be recompiled on your system to work with 
 First, make sure TruffleRuby's dependencies are installed, which are described at:
   https://github.com/oracle/truffleruby/blob/master/README.md#dependencies
 Then run the following command:
-        ${graalvm_home}/jre/languages/ruby/lib/truffle/post_install_hook.sh""",
+        ${graalvm_languages_dir}/ruby/lib/truffle/post_install_hook.sh""",
 ))
 
 mx.update_commands(_suite, {

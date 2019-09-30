@@ -17,7 +17,7 @@ ruby <<REPLACE
   current_repo = 'git@github.com:Shopify/truffleruby-shopify.git'
 
   content.sub!('https://github.com/oracle/truffleruby.git') { current_repo }
-  content.sub!('1970686ee677bcf2d08c34371d1673f56cd96b3e') { current_commit }
+  content.sub!('24304a356973e0e88ad6e5b377c9f874c72e66fa') { current_commit }
   raise "replacement failed" unless content.include?(current_commit) && content.include?(current_repo)
   File.write(target, content)
 REPLACE
