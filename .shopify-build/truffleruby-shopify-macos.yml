@@ -59,6 +59,14 @@ steps:
     run:
       - .shopify-build/setup-macos.sh
       - .shopify-build/test-specs.sh :truffle :truffle_capi
+  - label: Run Money specs
+    timeout: 30m
+    import_artifacts:
+      - pattern: '*.tar.gz'
+        into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-money.sh
   - label: Run Liquid tests
     timeout: 30m
     import_artifacts:
