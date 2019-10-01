@@ -138,6 +138,15 @@ describe "Kernel.rand" do
     rand(KernelSpecs::CustomRangeFloat.new(1.0)..KernelSpecs::CustomRangeFloat.new(42.0)).should be_an_instance_of(KernelSpecs::CustomRangeFloat)
     rand(Time.now..Time.now).should be_an_instance_of(Time)
   end
+
+  it "is random on boot" do
+    results = 2.times.map { ruby_exe('p rand', options: '--disable-gems') }
+    results.size.should == 2
+    parsed = nil
+    -> { parsed = results.map(&method(:Float)) }.should_not raise_error
+    # this is technically flaky, but very unlikely in a good distrubtion
+    parsed[0].should_not == parsed[1]
+  end
 end
 
 describe "Kernel#rand" do
