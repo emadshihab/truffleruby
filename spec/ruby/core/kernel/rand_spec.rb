@@ -144,7 +144,7 @@ describe "Kernel.rand" do
     results.size.should == 2
     parsed = nil
     -> { parsed = results.map(&method(:Float)) }.should_not raise_error
-    # this is technically flaky, but very unlikely in a good distrubtion
+    # this is technically flaky, but very unlikely in a good distribution
     parsed[0].should_not == parsed[1]
   end
 end
