@@ -65,9 +65,11 @@ public class OptionsCatalog {
     public static final OptionKey<Boolean> BACKTRACE_ON_INTERRUPT_KEY = new OptionKey<>(false);
     public static final OptionKey<Boolean> BACKTRACE_ON_SIGALRM_KEY = new OptionKey<>(!EMBEDDED_KEY.getDefaultValue());
     public static final OptionKey<Boolean> BACKTRACE_ON_RAISE_KEY = new OptionKey<>(false);
+    public static final OptionKey<Boolean> BACKTRACE_ON_RESCUE_KEY = new OptionKey<>(false);
     public static final OptionKey<Boolean> CEXTS_KEY = new OptionKey<>(true);
     public static final OptionKey<Boolean> CEXT_LOCK_KEY = new OptionKey<>(true);
     public static final OptionKey<String[]> CEXTS_LIBRARY_REMAP_KEY = new OptionKey<>(new String[]{}, StringArrayOptionType.INSTANCE);
+    public static final OptionKey<Boolean> CEXTS_KEEP_HANDLES_ALIVE_KEY = new OptionKey<>(true);
     public static final OptionKey<Boolean> OPTIONS_LOG_KEY = new OptionKey<>(false);
     public static final OptionKey<Boolean> LOG_LOAD_KEY = new OptionKey<>(false);
     public static final OptionKey<Boolean> LOG_AUTOLOAD_KEY = new OptionKey<>(false);
@@ -459,6 +461,13 @@ public class OptionsCatalog {
             .stability(OptionStability.EXPERIMENTAL)
             .build();
 
+    public static final OptionDescriptor BACKTRACE_ON_RESCUE = OptionDescriptor
+            .newBuilder(BACKTRACE_ON_RESCUE_KEY, "ruby.backtraces-rescue")
+            .help("Show the backtraces of exceptions at the point of them being rescued")
+            .category(OptionCategory.EXPERT)
+            .stability(OptionStability.EXPERIMENTAL)
+            .build();
+
     public static final OptionDescriptor CEXTS = OptionDescriptor
             .newBuilder(CEXTS_KEY, "ruby.cexts")
             .help("Enable use of C extensions")
@@ -476,6 +485,13 @@ public class OptionsCatalog {
     public static final OptionDescriptor CEXTS_LIBRARY_REMAP = OptionDescriptor
             .newBuilder(CEXTS_LIBRARY_REMAP_KEY, "ruby.cexts-remap")
             .help("Remap the name of native libraries, written in the form libexample.so:/path/to/actual/libexample.so")
+            .category(OptionCategory.EXPERT)
+            .stability(OptionStability.EXPERIMENTAL)
+            .build();
+
+    public static final OptionDescriptor CEXTS_KEEP_HANDLES_ALIVE = OptionDescriptor
+            .newBuilder(CEXTS_KEEP_HANDLES_ALIVE_KEY, "ruby.keep-handles-alive")
+            .help("Keep handles for value wrappers alive forever")
             .category(OptionCategory.EXPERT)
             .stability(OptionStability.EXPERIMENTAL)
             .build();
@@ -1097,12 +1113,16 @@ public class OptionsCatalog {
                 return BACKTRACE_ON_SIGALRM;
             case "ruby.backtraces-raise":
                 return BACKTRACE_ON_RAISE;
+            case "ruby.backtraces-rescue":
+                return BACKTRACE_ON_RESCUE;
             case "ruby.cexts":
                 return CEXTS;
             case "ruby.cexts-lock":
                 return CEXT_LOCK;
             case "ruby.cexts-remap":
                 return CEXTS_LIBRARY_REMAP;
+            case "ruby.keep-handles-alive":
+                return CEXTS_KEEP_HANDLES_ALIVE;
             case "ruby.options-log":
                 return OPTIONS_LOG;
             case "ruby.log-load":
@@ -1305,9 +1325,11 @@ public class OptionsCatalog {
             BACKTRACE_ON_INTERRUPT,
             BACKTRACE_ON_SIGALRM,
             BACKTRACE_ON_RAISE,
+            BACKTRACE_ON_RESCUE,
             CEXTS,
             CEXT_LOCK,
             CEXTS_LIBRARY_REMAP,
+            CEXTS_KEEP_HANDLES_ALIVE,
             OPTIONS_LOG,
             LOG_LOAD,
             LOG_AUTOLOAD,

@@ -61,11 +61,13 @@ EXPERT:
     BACKTRACE_ON_INTERRUPT: [backtraces-on-interrupt, boolean, false, Show the backtraces of all Threads on Ctrl+C]
     BACKTRACE_ON_SIGALRM: [backtraces-sigalrm, boolean, '!EMBEDDED', Show the backtraces of all Threads on SIGALRM]
     BACKTRACE_ON_RAISE: [backtraces-raise, boolean, false, Show the backtraces of exceptions at the point of them being raised]
+    BACKTRACE_ON_RESCUE: [backtraces-rescue, boolean, false, Show the backtraces of exceptions at the point of them being rescued]
 
     # C extension options
     CEXTS: [cexts, boolean, true, Enable use of C extensions]
     CEXT_LOCK: [cexts-lock, boolean, true, Use a Global Lock when running C extensions]
     CEXTS_LIBRARY_REMAP: [cexts-remap, string-array, [], 'Remap the name of native libraries, written in the form libexample.so:/path/to/actual/libexample.so']
+    CEXTS_KEEP_HANDLES_ALIVE: [keep-handles-alive, boolean, true, Keep handles for value wrappers alive forever]
 
     # Debugging the values of options
     OPTIONS_LOG: [options-log, boolean, false, Log the final value of all options]

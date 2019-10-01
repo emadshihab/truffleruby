@@ -244,7 +244,7 @@ public class MarkingService extends ReferenceProcessingService<MarkerReference> 
     public void addMark(Object obj) {
         if (marks.length == index) {
             Object[] oldMarks = marks;
-            marks = new Object[oldMarks.length * 2];
+            marks = new Object[Math.max(16, oldMarks.length * 2)];
             System.arraycopy(oldMarks, 0, marks, 0, oldMarks.length);
         }
         marks[index] = obj;
