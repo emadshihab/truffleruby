@@ -1454,7 +1454,7 @@ public class CExtNodes {
             ValueWrapper wrappedValue = toWrapperNode.execute(guardedObject);
             if (wrappedValue != null) {
                 noExceptionProfile.enter();
-                keepAliveNode.execute(guardedObject);
+                keepAliveNode.execute(wrappedValue);
             }
             return nil();
         }

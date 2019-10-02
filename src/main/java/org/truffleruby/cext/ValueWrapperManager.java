@@ -77,7 +77,7 @@ public class ValueWrapperManager {
                 threadData,
                 null,
                 ValueWrapperManager.class,
-                () -> context.getMarkingService().queueForMarking(holder.handleBlock.wrappers),
+                () -> context.getMarkingService().queueForMarking(holder.handleBlock),
                 null);
         return threadData;
     }
@@ -191,7 +191,9 @@ public class ValueWrapperManager {
         }
     }
 
-    protected static class HandleBlock {
+    public static class HandleBlock {
+
+        public static final HandleBlock DUMMY_BLOCK = new HandleBlock(null, 0, null);
 
         private static final Set<HandleBlock> keepAlive = new HashSet<>();
 
@@ -199,17 +201,22 @@ public class ValueWrapperManager {
         @SuppressWarnings("rawtypes") private final ValueWrapper[] wrappers;
         private int count;
 
-        private static void keepAlive(HandleBlock block) {
-            keepAlive.add(block);
+        public HandleBlock(RubyContext context) {
+            this(context, allocator.getFreeBlock(), new ValueWrapper[BLOCK_SIZE]);
         }
 
-        public HandleBlock(RubyContext context) {
-            if (context.getOptions().CEXTS_KEEP_HANDLES_ALIVE) {
+        private HandleBlock(RubyContext context, long base, ValueWrapper[] wrappers) {
+            if (context != null && context.getOptions().CEXTS_KEEP_HANDLES_ALIVE) {
                 keepAlive(this);
             }
-            base = allocator.getFreeBlock();
-            wrappers = new ValueWrapper[BLOCK_SIZE];
-            count = 0;
+            this.base = base;
+            this.wrappers = wrappers;
+            this.count = 0;
+        }
+
+        @TruffleBoundary
+        private static void keepAlive(HandleBlock block) {
+            keepAlive.add(block);
         }
 
         public long getBase() {
@@ -304,7 +311,7 @@ public class ValueWrapperManager {
             HandleBlock block = threadData.holder.handleBlock;
             if (block == null || block.isFull()) {
                 if (block != null) {
-                    context.getMarkingService().queueForMarking(block.wrappers);
+                    context.getMarkingService().queueForMarking(block);
                 }
                 block = threadData.makeNewBlock(context);
                 context.getValueWrapperManager().addToBlockMap(block);
