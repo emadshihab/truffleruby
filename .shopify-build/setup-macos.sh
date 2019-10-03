@@ -1,8 +1,6 @@
 #!/bin/bash
 
-set -x
-set -e
-
+ci_step "Installing Homebrew packages"
 # Install TruffleRuby dependencies
 brew install openssl llvm@4
 
