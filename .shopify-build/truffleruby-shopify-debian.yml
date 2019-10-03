@@ -1,3 +1,4 @@
+---
 containers:
   default:
     includes_source: false
@@ -8,89 +9,68 @@ containers:
         PIPA_PIPELINE_TEMPLATE: dockerfile
         PIPA_DOCKERFILE: .shopify-build/Dockerfile.debian
 
+shared:
+  truffle_run: &truffle_run
+    timeout: 30m
+    cache:
+      - path: dist
+        required: true
+        inherited: false
+        upload: false
+
 steps:
   - label: "Build TruffleRuby on Debian"
     high_concurrency: true
     timeout: 90m
-    artifact_paths:
-      - /build/artifacts
+    cache:
+      - path: dist
+        inherited: false
     run:
-      - .shopify-build/build-linux.sh
+      - .shopify-build/build.sh
   - wait
-  - label: Run Ruby language, command-line, and security specs
-    timeout: 30m
-    import_artifacts:
-      - pattern: '*.tar.gz'
-        into: archive
+  - <<: *truffle_run
+    label: "Run Ruby language, command-line, and security specs"
     run:
       - .shopify-build/test-specs.sh :language :command_line :security
-  - label: Run Ruby core specs
+  - <<: *truffle_run
+    label: Run Ruby core specs
     timeout: 30m
-    import_artifacts:
-      - pattern: '*.tar.gz'
-        into: archive
     run:
       - .shopify-build/test-specs.sh :core
-  - label: Run Ruby library specs
-    timeout: 30m
-    import_artifacts:
-      - pattern: '*.tar.gz'
-        into: archive
+  - <<: *truffle_run
+    label: Run Ruby library specs
     run:
       - .shopify-build/test-specs.sh :library :library_cext
-  - label: Run Ruby C extension specs
-    timeout: 30m
-    import_artifacts:
-      - pattern: '*.tar.gz'
-        into: archive
+  - <<: *truffle_run
+    label: Run Ruby C extension specs
     run:
       - .shopify-build/test-specs.sh :capi
-  - label: Run Truffle specs
-    timeout: 30m
-    import_artifacts:
-      - pattern: '*.tar.gz'
-        into: archive
+  - <<: *truffle_run
+    label: Run Truffle specs
     run:
       - .shopify-build/test-specs.sh :truffle :truffle_capi
-  - label: Run browser_sniffer tests
-    timeout: 30m
-    import_artifacts:
-      - pattern: '*.tar.gz'
-        into: archive
+  - <<: *truffle_run
+    label: Run browser_sniffer tests
     run:
       - .shopify-build/test-browser_sniffer.sh
-  - label: Run i18n tests
-    timeout: 30m
-    import_artifacts:
-      - pattern: '*.tar.gz'
-        into: archive
+  - <<: *truffle_run
+    label: Run i18n tests
     run:
       - .shopify-build/test-i18n.sh
-  - label: Run liquid tests
+  - <<: *truffle_run
+    label: Run liquid tests
     timeout: 30m
-    import_artifacts:
-      - pattern: '*.tar.gz'
-        into: archive
     run:
       - .shopify-build/test-liquid.sh
-  - label: Run measured tests
-    timeout: 30m
-    import_artifacts:
-      - pattern: '*.tar.gz'
-        into: archive
+  - <<: *truffle_run
+    label: Run measured tests
     run:
       - .shopify-build/test-measured.sh
-  - label: Run money tests
-    timeout: 30m
-    import_artifacts:
-      - pattern: '*.tar.gz'
-        into: archive
+  - <<: *truffle_run
+    label: Run money tests
     run:
       - .shopify-build/test-money.sh
-  - label: Run statsd-instrument tests
-    timeout: 30m
-    import_artifacts:
-      - pattern: '*.tar.gz'
-        into: archive
+  - <<: *truffle_run
+    label: Run statsd-instrument tests
     run:
       - .shopify-build/test-statsd-instrument.sh
