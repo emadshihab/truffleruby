@@ -59,15 +59,23 @@ steps:
     run:
       - .shopify-build/setup-macos.sh
       - .shopify-build/test-specs.sh :truffle :truffle_capi
-  - label: Run Money specs
+  - label: Run browser_sniffer tests
     timeout: 30m
     import_artifacts:
       - pattern: '*.tar.gz'
         into: archive
     run:
       - .shopify-build/setup-macos.sh
-      - .shopify-build/test-money.sh
-  - label: Run Liquid tests
+      - .shopify-build/test-browser_sniffer.sh
+  - label: Run i18n tests
+    timeout: 30m
+    import_artifacts:
+      - pattern: '*.tar.gz'
+        into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-i18n.sh
+  - label: Run liquid tests
     timeout: 30m
     import_artifacts:
       - pattern: '*.tar.gz'
@@ -75,6 +83,30 @@ steps:
     run:
       - .shopify-build/setup-macos.sh
       - .shopify-build/test-liquid.sh
+  - label: Run measured tests
+    timeout: 30m
+    import_artifacts:
+      - pattern: '*.tar.gz'
+        into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-measured.sh
+  - label: Run money tests
+    timeout: 30m
+    import_artifacts:
+      - pattern: '*.tar.gz'
+        into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-money.sh
+  - label: Run statsd-instrument tests
+    timeout: 30m
+    import_artifacts:
+      - pattern: '*.tar.gz'
+        into: archive
+    run:
+      - .shopify-build/setup-macos.sh
+      - .shopify-build/test-statsd-instrument.sh
   - block: "Release to dev"
   - label: Upload to S3 and send PR to Shopify/dev
     timeout: 30m
