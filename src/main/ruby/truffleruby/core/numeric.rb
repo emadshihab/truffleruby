@@ -384,6 +384,15 @@ class Numeric
     true
   end
 
+  def dup
+    self
+  end
+
+  def clone(freeze: true)
+    raise ArgumentError, "can't unfreeze #{self.class}" unless freeze
+    self
+  end
+
   def singleton_method_added(name)
     self.singleton_class.send(:remove_method, name)
     raise TypeError, "can't define singleton method #{name} for #{self.class}"
