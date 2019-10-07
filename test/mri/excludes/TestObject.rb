@@ -1,4 +1,3 @@
-exclude :test_clone, "needs investigation"
 exclude :test_implicit_respond_to_arity_3, "needs investigation"
 exclude :test_method_missing, "needs investigation"
 exclude :test_redefine_method_under_verbose, "needs investigation"

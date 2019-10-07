@@ -1,0 +1,143 @@
+---
+containers:
+  debian:
+    includes_source: false
+    environment: build
+    build:
+      tag_using_path: .shopify-build/Dockerfile.debian
+      env:
+        PIPA_PIPELINE_TEMPLATE: dockerfile
+        PIPA_DOCKERFILE: .shopify-build/Dockerfile.debian
+  macos:
+    anka: macos-xcode10.3:latest
+  upload:
+    environment: upload
+    includes_source: false
+    build:
+      tag_using_path: .shopify-build/Dockerfile.upload
+      env:
+        PIPA_PIPELINE_TEMPLATE: dockerfile
+        PIPA_DOCKERFILE: .shopify-build/Dockerfile.upload
+
+shared:
+  truffle_run: &truffle_run
+    timeout: 30m
+    cache:
+      - path: dist
+        required: true
+        inherited: false
+        upload: false
+        scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
+  language_specs: &language_specs
+    <<: *truffle_run
+    label: "Run Ruby language, command-line, and security specs"
+    run: .shopify-build/test-specs.sh :language :command_line :security
+  core_specs: &core_specs
+    <<: *truffle_run
+    label: Run Ruby core specs
+    run: .shopify-build/test-specs.sh :core
+  library_specs: &library_specs
+    <<: *truffle_run
+    label: Run Ruby library specs
+    run: .shopify-build/test-specs.sh :library :library_cext
+  capi_specs: &capi_specs
+    <<: *truffle_run
+    label: Run Ruby C extension specs
+    run: .shopify-build/test-specs.sh :capi
+  truffle_specs: &truffle_specs
+    <<: *truffle_run
+    label: Run Truffle specs
+    run: .shopify-build/test-specs.sh :truffle :truffle_capi
+  browser_sniffer_test: &browser_sniffer_test
+    <<: *truffle_run
+    label: Run browser_sniffer tests
+    run: .shopify-build/test-gem.sh browser_sniffer
+  i18n_test: &i18n_test
+    <<: *truffle_run
+    label: Run i18n tests
+    run: .shopify-build/test-gem.sh i18n
+  liquid_test: &liquid_test
+    <<: *truffle_run
+    label: Run liquid tests
+    run: .shopify-build/test-gem.sh liquid
+  measured_test: &measured_test
+    <<: *truffle_run
+    label: Run measured tests
+    run: .shopify-build/test-gem.sh measured
+  money_test: &money_test
+    <<: *truffle_run
+    label: Run money tests
+    run: .shopify-build/test-gem.sh money
+  statsd_instrument_test: &statsd_instrument_test
+    <<: *truffle_run
+    label: Run statsd-instrument tests
+    run: .shopify-build/test-gem.sh statsd-instrument
+
+pipelines:
+  truffleruby-shopify-debian:
+    default_container: debian
+    steps:
+      - label: "Build TruffleRuby on Debian"
+        high_concurrency: true
+        timeout: 90m
+        cache:
+          - path: dist
+            inherited: false
+            scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
+        run:
+          - .shopify-build/build.sh
+      - wait
+      - <<: *language_specs
+      - <<: *core_specs
+      - <<: *library_specs
+      - <<: *capi_specs
+      - <<: *truffle_specs
+      - <<: *browser_sniffer_test
+      - <<: *i18n_test
+      - <<: *liquid_test
+      - <<: *measured_test
+      - <<: *money_test
+      - <<: *statsd_instrument_test
+
+  truffleruby-shopify-macos:
+    default_container: macos
+    steps:
+      - label: Build TruffleRuby on MacOS
+        timeout: 90m
+        cache:
+          - path: dist
+            inherited: false
+            scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
+        run:
+          - .shopify-build/build.sh
+      - wait
+      - <<: *language_specs
+      - <<: *core_specs
+      - <<: *library_specs
+      - <<: *capi_specs
+      - <<: *truffle_specs
+      - <<: *browser_sniffer_test
+      - <<: *i18n_test
+      - <<: *liquid_test
+      - <<: *measured_test
+      - <<: *money_test
+      - <<: *statsd_instrument_test
+      - block: "Release to dev"
+      - label: Upload to S3 and send PR to Shopify/dev
+        timeout: 30m
+        container: upload
+        cache:
+          - path: dist
+            required: true
+            inherited: false
+            upload: false
+            scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
+        run:
+          - .shopify-build/prepare-package.sh
+          - git clone git@github.com:Shopify/ruby-builder.git
+          - mkdir ruby-builder/rubies
+          - mv rubies/truffleruby*.tgz ruby-builder/rubies/
+          - cd ruby-builder
+          - gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)"
+          - bundle install --without test --without development
+          - bundle exec ruby bin/upload_bins_for_dev

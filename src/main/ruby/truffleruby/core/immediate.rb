@@ -55,7 +55,7 @@ module ImmediateValue
   private :protected_singleton_methods
 
   def clone
-    raise TypeError, "can't clone #{self.class.name}"
+    self
   end
 end
 
