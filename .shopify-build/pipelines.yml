@@ -122,7 +122,13 @@ pipelines:
       - <<: *measured_test
       - <<: *money_test
       - <<: *statsd_instrument_test
-      - block: "Release to dev"
+      - block: Make tarball available as artifact
+      - <<: *truffle_run
+        label: Make a tarball
+        run: .shopify-build/make-artifact-tarball.sh
+        artifact_paths:
+          - .shopify-build/artifacts
+      - block: Release to dev
       - label: Upload to S3 and send PR to Shopify/dev
         timeout: 30m
         container: upload
