@@ -4834,6 +4834,10 @@ int rb_get_kwargs(VALUE keyword_hash, const ID *table, int required, int optiona
   return extracted;
 }
 
+int ruby_vsnprintf(char *str, size_t n, char const *fmt, va_list ap) {
+    rb_tr_error("ruby_vsnprintf not implemented");
+}
+
 VALUE rb_extract_keywords(VALUE *orighash) {
   rb_tr_error("rb_extract_keywords not implemented");
 }
