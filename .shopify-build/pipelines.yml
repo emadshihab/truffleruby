@@ -64,6 +64,10 @@ shared:
     <<: *truffle_run
     label: Run measured tests
     run: .shopify-build/test-gem.sh measured
+  minitest_test: &minitest_test
+    <<: *truffle_run
+    label: Run minitest tests
+    run: .shopify-build/test-gem.sh minitest
   money_test: &money_test
     <<: *truffle_run
     label: Run money tests
@@ -96,6 +100,7 @@ pipelines:
       - <<: *i18n_test
       - <<: *liquid_test
       - <<: *measured_test
+      - <<: *minitest_test
       - <<: *money_test
       - <<: *statsd_instrument_test
 
@@ -120,6 +125,7 @@ pipelines:
       - <<: *i18n_test
       - <<: *liquid_test
       - <<: *measured_test
+      - <<: *minitest_test
       - <<: *money_test
       - <<: *statsd_instrument_test
       - block: Make tarball available as artifact
