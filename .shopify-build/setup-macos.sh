@@ -5,4 +5,5 @@ ci_step "Installing Homebrew packages"
 brew install openssl
 
 # Install dependencies for tests - we'll just install all in all cases at the moment
-brew install libxml2 libxslt memcached pkgconfig sqlite3
+brew install libxml2 libxslt memcached pkgconfig sqlite3 mysql
+bundle config --global build.mysql2 --with-opt-dir="$(brew --prefix openssl)"
