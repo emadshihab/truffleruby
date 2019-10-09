@@ -753,7 +753,7 @@ module Process
 
     def ==(other)
       other = other.to_i if other.kind_of? Process::Status
-      @status == other
+      @raw_status == other
     end
 
     def >>(num)
