@@ -66,7 +66,6 @@ EXPERT:
     # C extension options
     CEXTS: [cexts, boolean, true, Enable use of C extensions]
     CEXT_LOCK: [cexts-lock, boolean, true, Use a Global Lock when running C extensions]
-    CEXTS_LIBRARY_REMAP: [cexts-remap, string-array, [], 'Remap the name of native libraries, written in the form libexample.so:/path/to/actual/libexample.so']
     CEXTS_KEEP_HANDLES_ALIVE: [keep-handles-alive, boolean, true, Keep handles for value wrappers alive forever]
 
     # Debugging the values of options
@@ -151,7 +150,6 @@ INTERNAL: # Options for debugging the TruffleRuby implementation
     CLONE_DEFAULT: [clone-default, boolean, true, Default option for cloning]
     INLINE_DEFAULT: [inline-default, boolean, true, Default option for inlining]
     CORE_ALWAYS_CLONE: [core-always-clone, boolean, false, Always clone built-in core methods]
-    PRIMITIVE_CALLERS_ALWAYS_CLONE: [primitive-callers-always-clone, boolean, CLONE_DEFAULT, Always clone methods which call primitives]
     ALWAYS_SPLIT_HONOR: [always-split-honor, boolean, CLONE_DEFAULT, 'Honor Truffle::Graal.always_split annotations']
     INLINE_NEEDS_CALLER_FRAME: [inline-needs-caller-frame, boolean, INLINE_DEFAULT, Inline methods that need their caller frame]
     YIELD_ALWAYS_CLONE: [yield-always-clone, boolean, CLONE_DEFAULT, Always clone yields]

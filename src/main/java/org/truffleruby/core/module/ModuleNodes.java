@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentMap;
 import org.jcodings.specific.UTF8Encoding;
 import org.truffleruby.Layouts;
 import org.truffleruby.RubyContext;
-import org.truffleruby.builtins.CoreClass;
+import org.truffleruby.builtins.CoreModule;
 import org.truffleruby.builtins.CoreMethod;
 import org.truffleruby.builtins.CoreMethodArrayArgumentsNode;
 import org.truffleruby.builtins.CoreMethodNode;
@@ -118,7 +118,7 @@ import com.oracle.truffle.api.profiles.BranchProfile;
 import com.oracle.truffle.api.profiles.ValueProfile;
 import com.oracle.truffle.api.source.SourceSection;
 
-@CoreClass("Module")
+@CoreModule(value = "Module", isClass = true)
 public abstract class ModuleNodes {
 
     @TruffleBoundary
@@ -335,7 +335,7 @@ public abstract class ModuleNodes {
                         this));
             }
 
-            InternalMethod aliasMethod = method.withName(newName);
+            InternalMethod aliasMethod = method.withName(getContext(), newName);
 
             addMethodNode.executeAddMethod(module, aliasMethod, aliasMethod.getVisibility());
             return module;
@@ -1112,7 +1112,7 @@ public abstract class ModuleNodes {
                 }
             }
 
-            Layouts.MODULE.getFields(module).addMethod(getContext(), this, method.withName(name));
+            Layouts.MODULE.getFields(module).addMethod(getContext(), this, method.withName(getContext(), name));
             return getSymbol(name);
         }
 
@@ -1191,7 +1191,7 @@ public abstract class ModuleNodes {
 
         @TruffleBoundary
         private DynamicObject addMethod(DynamicObject module, String name, InternalMethod method) {
-            method = method.withName(name);
+            method = method.withName(getContext(), name);
 
             final Frame frame = getContext().getCallStack().getCallerFrameIgnoringSend(FrameAccess.READ_ONLY);
             final Visibility visibility = GetCurrentVisibilityNode.getVisibilityFromNameAndFrame(name, frame);

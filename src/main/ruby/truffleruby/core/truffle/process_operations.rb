@@ -192,7 +192,7 @@ module Truffle
 
         parse_options(options)
 
-        if env
+        if env and !env.empty?
           array = (@options[:env] ||= [])
 
           env.each do |key, value|
@@ -376,8 +376,6 @@ module Truffle
         @env_array = env.map { |k, v| "#{k}=#{v}" }
 
         if alter_process
-          require 'fcntl'
-
           if pgroup = @options[:pgroup]
             Process.setpgid(0, pgroup)
           end
@@ -396,8 +394,8 @@ module Truffle
               fd = entry.to_i
 
               if fd > 2
-                flags = Truffle::POSIX.fcntl(fd, Fcntl::F_GETFD, 0)
-                Truffle::POSIX.fcntl(fd, Fcntl::F_SETFD, flags | Fcntl::FD_CLOEXEC) unless flags < 0
+                flags = Truffle::POSIX.fcntl(fd, File::F_GETFD, 0)
+                Truffle::POSIX.fcntl(fd, File::F_SETFD, flags | File::FD_CLOEXEC) unless flags < 0
               end
             end
           end
@@ -413,18 +411,16 @@ module Truffle
       end
 
       def safe_close_on_exec?(fd)
-        require 'fcntl'
-
-        flags = Truffle::POSIX.fcntl(fd, Fcntl::F_GETFD, 0)
-        (flags & Fcntl::FD_CLOEXEC) != 0
+        flags = Truffle::POSIX.fcntl(fd, File::F_GETFD, 0)
+        (flags & File::FD_CLOEXEC) != 0
       end
 
       def redirect_file_descriptor(from, to, alter_process)
         to = (-to + 1) if to < 0
         if alter_process && from == to
-          flags = Truffle::POSIX.fcntl(from, Fcntl::F_GETFD, 0)
-          unless flags < 0 || flags & Fcntl::FD_CLOEXEC == 0
-            Truffle::POSIX.fcntl(from, Fcntl::F_SETFD, flags ^ Fcntl::FD_CLOEXEC)
+          flags = Truffle::POSIX.fcntl(from, File::F_GETFD, 0)
+          unless flags < 0 || flags & File::FD_CLOEXEC == 0
+            Truffle::POSIX.fcntl(from, File::F_SETFD, flags ^ File::FD_CLOEXEC)
           end
         end
         result = Truffle::POSIX.dup2(to, from)
@@ -438,7 +434,7 @@ module Truffle
           if pid < 0
             # macOS posix_spawnp(3) returns -1 and no pid when the command is not found,
             # Linux returns 0, sets the pid and let the child do the PATH lookup.
-            Truffle.invoke_primitive :thread_set_return_code, Process::Status.new(-1, 127, nil, nil)
+            TrufflePrimitive.thread_set_return_code Process::Status.new(-1, 127, nil, nil)
           else
             # the subprocess will fail, just wait for it
             Process.wait(pid) # Sets $? and avoids a zombie process

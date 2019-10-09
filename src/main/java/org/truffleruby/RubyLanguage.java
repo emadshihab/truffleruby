@@ -51,7 +51,7 @@ import com.oracle.truffle.api.source.SourceSection;
         version = BuildInformationImpl.RUBY_VERSION,
         characterMimeTypes = TruffleRuby.MIME_TYPE,
         defaultMimeType = TruffleRuby.MIME_TYPE,
-        dependentLanguages = TruffleRuby.LLVM_ID,
+        dependentLanguages = { "nfi", "llvm" },
         fileTypeDetectors = RubyFileTypeDetector.class)
 @ProvidedTags({
         CoverageManager.LineTag.class,
@@ -69,8 +69,7 @@ public class RubyLanguage extends TruffleLanguage<RubyContext> {
     public static final String LLVM_BITCODE_MIME_TYPE = "application/x-llvm-ir-bitcode";
 
     public static final String CEXT_MIME_TYPE = "application/x-ruby-cext-library";
-    public static final String CEXT_EXTENSION = ".su";
-    public static final String CEXT_BITCODE_EXTENSION = "bc";
+    public static final String CEXT_EXTENSION = "." + Platform.LIBSUFFIX;
 
     public static final String RESOURCE_SCHEME = "resource:";
     public static final String RUBY_HOME_SCHEME = "rubyHome:";

@@ -68,7 +68,6 @@ public class OptionsCatalog {
     public static final OptionKey<Boolean> BACKTRACE_ON_RESCUE_KEY = new OptionKey<>(false);
     public static final OptionKey<Boolean> CEXTS_KEY = new OptionKey<>(true);
     public static final OptionKey<Boolean> CEXT_LOCK_KEY = new OptionKey<>(true);
-    public static final OptionKey<String[]> CEXTS_LIBRARY_REMAP_KEY = new OptionKey<>(new String[]{}, StringArrayOptionType.INSTANCE);
     public static final OptionKey<Boolean> CEXTS_KEEP_HANDLES_ALIVE_KEY = new OptionKey<>(true);
     public static final OptionKey<Boolean> OPTIONS_LOG_KEY = new OptionKey<>(false);
     public static final OptionKey<Boolean> LOG_LOAD_KEY = new OptionKey<>(false);
@@ -130,7 +129,6 @@ public class OptionsCatalog {
     public static final OptionKey<Boolean> CLONE_DEFAULT_KEY = new OptionKey<>(true);
     public static final OptionKey<Boolean> INLINE_DEFAULT_KEY = new OptionKey<>(true);
     public static final OptionKey<Boolean> CORE_ALWAYS_CLONE_KEY = new OptionKey<>(false);
-    public static final OptionKey<Boolean> PRIMITIVE_CALLERS_ALWAYS_CLONE_KEY = new OptionKey<>(CLONE_DEFAULT_KEY.getDefaultValue());
     public static final OptionKey<Boolean> ALWAYS_SPLIT_HONOR_KEY = new OptionKey<>(CLONE_DEFAULT_KEY.getDefaultValue());
     public static final OptionKey<Boolean> INLINE_NEEDS_CALLER_FRAME_KEY = new OptionKey<>(INLINE_DEFAULT_KEY.getDefaultValue());
     public static final OptionKey<Boolean> YIELD_ALWAYS_CLONE_KEY = new OptionKey<>(CLONE_DEFAULT_KEY.getDefaultValue());
@@ -478,13 +476,6 @@ public class OptionsCatalog {
     public static final OptionDescriptor CEXT_LOCK = OptionDescriptor
             .newBuilder(CEXT_LOCK_KEY, "ruby.cexts-lock")
             .help("Use a Global Lock when running C extensions")
-            .category(OptionCategory.EXPERT)
-            .stability(OptionStability.EXPERIMENTAL)
-            .build();
-
-    public static final OptionDescriptor CEXTS_LIBRARY_REMAP = OptionDescriptor
-            .newBuilder(CEXTS_LIBRARY_REMAP_KEY, "ruby.cexts-remap")
-            .help("Remap the name of native libraries, written in the form libexample.so:/path/to/actual/libexample.so")
             .category(OptionCategory.EXPERT)
             .stability(OptionStability.EXPERIMENTAL)
             .build();
@@ -916,13 +907,6 @@ public class OptionsCatalog {
             .stability(OptionStability.EXPERIMENTAL)
             .build();
 
-    public static final OptionDescriptor PRIMITIVE_CALLERS_ALWAYS_CLONE = OptionDescriptor
-            .newBuilder(PRIMITIVE_CALLERS_ALWAYS_CLONE_KEY, "ruby.primitive-callers-always-clone")
-            .help("Always clone methods which call primitives")
-            .category(OptionCategory.INTERNAL)
-            .stability(OptionStability.EXPERIMENTAL)
-            .build();
-
     public static final OptionDescriptor ALWAYS_SPLIT_HONOR = OptionDescriptor
             .newBuilder(ALWAYS_SPLIT_HONOR_KEY, "ruby.always-split-honor")
             .help("Honor Truffle::Graal.always_split annotations")
@@ -1119,8 +1103,6 @@ public class OptionsCatalog {
                 return CEXTS;
             case "ruby.cexts-lock":
                 return CEXT_LOCK;
-            case "ruby.cexts-remap":
-                return CEXTS_LIBRARY_REMAP;
             case "ruby.keep-handles-alive":
                 return CEXTS_KEEP_HANDLES_ALIVE;
             case "ruby.options-log":
@@ -1243,8 +1225,6 @@ public class OptionsCatalog {
                 return INLINE_DEFAULT;
             case "ruby.core-always-clone":
                 return CORE_ALWAYS_CLONE;
-            case "ruby.primitive-callers-always-clone":
-                return PRIMITIVE_CALLERS_ALWAYS_CLONE;
             case "ruby.always-split-honor":
                 return ALWAYS_SPLIT_HONOR;
             case "ruby.inline-needs-caller-frame":
@@ -1328,7 +1308,6 @@ public class OptionsCatalog {
             BACKTRACE_ON_RESCUE,
             CEXTS,
             CEXT_LOCK,
-            CEXTS_LIBRARY_REMAP,
             CEXTS_KEEP_HANDLES_ALIVE,
             OPTIONS_LOG,
             LOG_LOAD,
@@ -1390,7 +1369,6 @@ public class OptionsCatalog {
             CLONE_DEFAULT,
             INLINE_DEFAULT,
             CORE_ALWAYS_CLONE,
-            PRIMITIVE_CALLERS_ALWAYS_CLONE,
             ALWAYS_SPLIT_HONOR,
             INLINE_NEEDS_CALLER_FRAME,
             YIELD_ALWAYS_CLONE,

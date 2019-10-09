@@ -1509,9 +1509,12 @@ VALUE rb_ary_resize(VALUE ary, long len) {
 
 VALUE rb_ary_new_from_args(long n, ...) {
   VALUE array = rb_ary_new_capa(n);
+  va_list args;
+  va_start(args, n);
   for (int i = 0; i < n; i++) {
-    rb_ary_store(array, i, (VALUE) polyglot_get_arg(1+i));
+    rb_ary_store(array, i, va_arg(args, VALUE));
   }
+  va_end(args);
   return array;
 }
 
@@ -1614,7 +1617,7 @@ VALUE rb_ary_to_ary(VALUE array) {
   VALUE tmp = rb_check_array_type(array);
 
   if (!NIL_P(tmp)) return tmp;
-  return rb_ary_new3(1, array);
+  return rb_ary_new_from_args(1, array);
 }
 
 VALUE rb_ary_subseq(VALUE array, long start, long length) {
@@ -1728,6 +1731,10 @@ VALUE rb_hash_size(VALUE hash) {
 
 size_t rb_hash_size_num(VALUE hash) {
   return (size_t) FIX2ULONG(rb_hash_size(hash));
+}
+
+struct st_table *rb_hash_tbl(VALUE hash, const char *file, int line) {
+  rb_tr_error("rb_hash_tbl not implemented");
 }
 
 // Class
@@ -1884,7 +1891,7 @@ char* ruby_strdup(const char *str) {
 // Calls
 
 int rb_respond_to(VALUE object, ID name) {
-  return polyglot_as_boolean(RUBY_INVOKE_NO_WRAP(object, "respond_to?", name));
+  return RUBY_CEXT_INVOKE("rb_respond_to", object, ID2SYM(name));
 }
 
 VALUE rb_funcallv(VALUE object, ID name, int args_count, const VALUE *args) {
@@ -2959,13 +2966,6 @@ void* rb_tr_new_managed_struct_internal(void *type) {
   return polyglot_invoke(RUBY_CEXT, "rb_tr_new_managed_struct", type);
 }
 
-// Deprecated truffle LLVM intrinsic only used internally here
-void truffle_load_library(const char *string);
-
-void rb_tr_load_library(VALUE library) {
-  truffle_load_library(RSTRING_PTR(library));
-}
-
 // Remaining functions
 
 void rb_big_2comp(VALUE x) {
@@ -3122,6 +3122,10 @@ VALUE rb_tracearg_raised_exception(rb_trace_arg_t *trace_arg) {
 
 VALUE rb_tracearg_object(rb_trace_arg_t *trace_arg) {
   rb_tr_error("rb_tracearg_object not implemented");
+}
+
+rb_trace_arg_t *rb_tracearg_from_tracepoint(VALUE tpval) {
+  rb_tr_error("rb_tracearg_from_tracepoint not implemented");
 }
 
 int rb_postponed_job_register(unsigned int flags, rb_postponed_job_func_t func, void *data) {
@@ -4828,6 +4832,10 @@ int rb_get_kwargs(VALUE keyword_hash, const ID *table, int required, int optiona
   }
 
   return extracted;
+}
+
+int ruby_vsnprintf(char *str, size_t n, char const *fmt, va_list ap) {
+    rb_tr_error("ruby_vsnprintf not implemented");
 }
 
 VALUE rb_extract_keywords(VALUE *orighash) {
