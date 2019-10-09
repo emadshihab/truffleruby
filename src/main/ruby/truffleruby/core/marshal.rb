@@ -114,7 +114,7 @@ class Exception
     cause = self.cause
     out << ms.serialize_fixnum(cause ? number_of_ivars + 1 : number_of_ivars)
     out << ms.serialize(:mesg)
-    out << ms.serialize(Truffle.invoke_primitive(:exception_message, self))
+    out << ms.serialize(TrufflePrimitive.exception_message(self))
     out << ms.serialize(:bt)
     out << ms.serialize(self.backtrace)
     if cause
@@ -156,7 +156,7 @@ class Time
     out << ms.serialize_integer(count)
 
     ivars.each do |ivar|
-      val = Truffle.invoke_primitive :object_ivar_get, self, ivar
+      val = TrufflePrimitive.object_ivar_get self, ivar
       out << ms.serialize(ivar)
       out << ms.serialize(val)
     end
@@ -173,12 +173,12 @@ end
 module Marshal
   class State
     def serialize_encoding?(obj)
-      enc = Truffle.invoke_primitive :encoding_get_object_encoding, obj
+      enc = TrufflePrimitive.encoding_get_object_encoding obj
       enc && enc != Encoding::BINARY
     end
 
     def serialize_encoding(obj)
-      enc = Truffle.invoke_primitive :encoding_get_object_encoding, obj
+      enc = TrufflePrimitive.encoding_get_object_encoding obj
       Truffle.privately do
         case enc
         when Encoding::US_ASCII
@@ -222,7 +222,7 @@ module Marshal
           end
         end
 
-        Truffle.invoke_primitive :object_ivar_set, obj, prepare_ivar(ivar), value
+        TrufflePrimitive.object_ivar_set obj, prepare_ivar(ivar), value
       end
     end
 
@@ -245,7 +245,7 @@ module Marshal
           end
         end
 
-        Truffle.invoke_primitive(:string_initialize, obj, bytes, Encoding::ASCII_8BIT)
+        TrufflePrimitive.string_initialize(obj, bytes, Encoding::ASCII_8BIT)
       else
         obj = bytes
       end
@@ -278,7 +278,7 @@ class Range
     out << ms.serialize(:excl)
     out << ms.serialize(self.exclude_end?)
     ivars.each do |ivar|
-      val = Truffle.invoke_primitive :object_ivar_get, self, ivar
+      val = TrufflePrimitive.object_ivar_get self, ivar
       out << ms.serialize(ivar)
       out << ms.serialize(val)
     end
@@ -421,7 +421,7 @@ class Time
     nano_num = obj.instance_variable_get(:@nano_num)
     nano_den = obj.instance_variable_get(:@nano_den)
     if nano_num && nano_den
-      Truffle.invoke_primitive(:time_set_nseconds, obj,
+      TrufflePrimitive.time_set_nseconds(obj,
         Rational(nano_num, nano_den).to_i)
     end
 
@@ -1012,14 +1012,14 @@ module Marshal
 
     def serialize_extended_object(obj)
       str = +''
-      Truffle.invoke_primitive :vm_extended_modules, obj, -> mod do
+      TrufflePrimitive.vm_extended_modules obj, -> mod do
         str << "e#{serialize(mod.name.to_sym)}"
       end
       Truffle::Type.binary_string(str)
     end
 
     def serializable_instance_variables(obj, exclude_ivars)
-      ivars = Truffle.invoke_primitive :object_ivars, obj
+      ivars = TrufflePrimitive.object_ivars obj
       ivars -= exclude_ivars if exclude_ivars
       ivars
     end
@@ -1054,7 +1054,7 @@ module Marshal
       str = ''.b
 
       ivars.each do |ivar|
-        val = Truffle.invoke_primitive :object_ivar_get, obj, ivar
+        val = TrufflePrimitive.object_ivar_get obj, ivar
         str << serialize(ivar)
         str << serialize(val)
       end
@@ -1185,13 +1185,13 @@ module Marshal
         value = construct
         case ivar
         when :bt
-          Truffle.invoke_primitive :object_ivar_set, obj, :@custom_backtrace, value
+          TrufflePrimitive.object_ivar_set obj, :@custom_backtrace, value
         when :mesg
-          Truffle.invoke_primitive :exception_set_message, obj, value
+          TrufflePrimitive.exception_set_message obj, value
         when :cause
-          Truffle.invoke_primitive :exception_set_cause, obj, value
+          TrufflePrimitive.exception_set_cause obj, value
         else # Regular instance variable
-          Truffle.invoke_primitive :object_ivar_set, obj, ivar, value
+          TrufflePrimitive.object_ivar_set obj, ivar, value
         end
       end
     end
@@ -1246,7 +1246,7 @@ module Marshal
       store_unique_object range
 
       ivars.each do |name, value|
-        Truffle.invoke_primitive :object_ivar_set, range, name, value
+        TrufflePrimitive.object_ivar_set range, name, value
       end
 
       range

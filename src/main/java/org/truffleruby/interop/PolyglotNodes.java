@@ -11,7 +11,7 @@ package org.truffleruby.interop;
 
 import java.io.IOException;
 
-import org.truffleruby.builtins.CoreClass;
+import org.truffleruby.builtins.CoreModule;
 import org.truffleruby.builtins.CoreMethod;
 import org.truffleruby.builtins.CoreMethodArrayArgumentsNode;
 import org.truffleruby.core.rope.Rope;
@@ -35,7 +35,7 @@ import com.oracle.truffle.api.nodes.IndirectCallNode;
 import com.oracle.truffle.api.object.DynamicObject;
 import com.oracle.truffle.api.source.Source;
 
-@CoreClass("Polyglot")
+@CoreModule("Polyglot")
 public abstract class PolyglotNodes {
 
     @CoreMethod(names = "eval", isModuleFunction = true, required = 2)
@@ -73,7 +73,7 @@ public abstract class PolyglotNodes {
             final String codeString = StringOperations.getString(code);
             final Source source = Source.newBuilder(idString, codeString, "(eval)").build();
             try {
-                return getContext().getEnv().parse(source);
+                return getContext().getEnv().parsePublic(source);
             } catch (IllegalStateException e) {
                 throw new RaiseException(getContext(), coreExceptions().argumentError(e.getMessage(), this));
             }
@@ -120,7 +120,7 @@ public abstract class PolyglotNodes {
         private Object eval(Source source) {
             final CallTarget callTarget;
             try {
-                callTarget = getContext().getEnv().parse(source);
+                callTarget = getContext().getEnv().parsePublic(source);
             } catch (IllegalStateException e) {
                 throw new RaiseException(getContext(), coreExceptions().argumentError(e.getMessage(), this));
             }

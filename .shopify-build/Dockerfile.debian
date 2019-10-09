@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -y \
   libc++abi-dev \
   libssl-dev \
   libz-dev \
-  llvm \
   locales \
   make \
   openjdk-8-jdk \

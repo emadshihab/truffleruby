@@ -118,8 +118,6 @@ public class Options {
     public final boolean CEXTS;
     /** --cexts-lock=true */
     public final boolean CEXT_LOCK;
-    /** --cexts-remap=new String[]{} */
-    public final String[] CEXTS_LIBRARY_REMAP;
     /** --keep-handles-alive=true */
     public final boolean CEXTS_KEEP_HANDLES_ALIVE;
     /** --options-log=false */
@@ -242,8 +240,6 @@ public class Options {
     public final boolean INLINE_DEFAULT;
     /** --core-always-clone=false */
     public final boolean CORE_ALWAYS_CLONE;
-    /** --primitive-callers-always-clone=CLONE_DEFAULT */
-    public final boolean PRIMITIVE_CALLERS_ALWAYS_CLONE;
     /** --always-split-honor=CLONE_DEFAULT */
     public final boolean ALWAYS_SPLIT_HONOR;
     /** --inline-needs-caller-frame=INLINE_DEFAULT */
@@ -322,7 +318,6 @@ public class Options {
         BACKTRACE_ON_RESCUE = options.get(OptionsCatalog.BACKTRACE_ON_RESCUE_KEY);
         CEXTS = options.get(OptionsCatalog.CEXTS_KEY);
         CEXT_LOCK = options.get(OptionsCatalog.CEXT_LOCK_KEY);
-        CEXTS_LIBRARY_REMAP = options.get(OptionsCatalog.CEXTS_LIBRARY_REMAP_KEY);
         CEXTS_KEEP_HANDLES_ALIVE = options.get(OptionsCatalog.CEXTS_KEEP_HANDLES_ALIVE_KEY);
         OPTIONS_LOG = options.get(OptionsCatalog.OPTIONS_LOG_KEY);
         LOG_LOAD = options.get(OptionsCatalog.LOG_LOAD_KEY);
@@ -384,7 +379,6 @@ public class Options {
         CLONE_DEFAULT = options.get(OptionsCatalog.CLONE_DEFAULT_KEY);
         INLINE_DEFAULT = options.get(OptionsCatalog.INLINE_DEFAULT_KEY);
         CORE_ALWAYS_CLONE = options.get(OptionsCatalog.CORE_ALWAYS_CLONE_KEY);
-        PRIMITIVE_CALLERS_ALWAYS_CLONE = options.hasBeenSet(OptionsCatalog.PRIMITIVE_CALLERS_ALWAYS_CLONE_KEY) ? options.get(OptionsCatalog.PRIMITIVE_CALLERS_ALWAYS_CLONE_KEY) : CLONE_DEFAULT;
         ALWAYS_SPLIT_HONOR = options.hasBeenSet(OptionsCatalog.ALWAYS_SPLIT_HONOR_KEY) ? options.get(OptionsCatalog.ALWAYS_SPLIT_HONOR_KEY) : CLONE_DEFAULT;
         INLINE_NEEDS_CALLER_FRAME = options.hasBeenSet(OptionsCatalog.INLINE_NEEDS_CALLER_FRAME_KEY) ? options.get(OptionsCatalog.INLINE_NEEDS_CALLER_FRAME_KEY) : INLINE_DEFAULT;
         YIELD_ALWAYS_CLONE = options.hasBeenSet(OptionsCatalog.YIELD_ALWAYS_CLONE_KEY) ? options.get(OptionsCatalog.YIELD_ALWAYS_CLONE_KEY) : CLONE_DEFAULT;
@@ -499,8 +493,6 @@ public class Options {
                 return CEXTS;
             case "ruby.cexts-lock":
                 return CEXT_LOCK;
-            case "ruby.cexts-remap":
-                return CEXTS_LIBRARY_REMAP;
             case "ruby.keep-handles-alive":
                 return CEXTS_KEEP_HANDLES_ALIVE;
             case "ruby.options-log":
@@ -623,8 +615,6 @@ public class Options {
                 return INLINE_DEFAULT;
             case "ruby.core-always-clone":
                 return CORE_ALWAYS_CLONE;
-            case "ruby.primitive-callers-always-clone":
-                return PRIMITIVE_CALLERS_ALWAYS_CLONE;
             case "ruby.always-split-honor":
                 return ALWAYS_SPLIT_HONOR;
             case "ruby.inline-needs-caller-frame":
