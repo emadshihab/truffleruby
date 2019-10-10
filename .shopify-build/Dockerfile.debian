@@ -20,6 +20,8 @@ RUN apt-get update && apt-get install -y \
 # Dependencies only needed for tests
 
 RUN apt-get install -y \
+  cmake \
+  libsnappy-dev \
   libsqlite3-dev \
   libxml2-dev \
   libxslt-dev \

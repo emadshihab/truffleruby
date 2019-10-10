@@ -76,6 +76,10 @@ shared:
     <<: *truffle_run
     label: Run money tests
     run: .shopify-build/test-gem.sh money
+  snappy_test: &snappy_test
+    <<: *truffle_run
+    label: Run snappy tests
+    run: .shopify-build/test-gem.sh snappy
   statsd_instrument_test: &statsd_instrument_test
     <<: *truffle_run
     label: Run statsd-instrument tests
@@ -107,6 +111,7 @@ pipelines:
       - <<: *measured_test
       - <<: *minitest_test
       - <<: *money_test
+      - <<: *snappy_test
       - <<: *statsd_instrument_test
 
   truffleruby-shopify-macos:
@@ -133,6 +138,7 @@ pipelines:
       - <<: *measured_test
       - <<: *minitest_test
       - <<: *money_test
+      - <<: *snappy_test
       - <<: *statsd_instrument_test
       - block: Make tarball available as artifact
       - <<: *truffle_run
