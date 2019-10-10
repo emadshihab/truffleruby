@@ -348,32 +348,14 @@ module Truffle::CExt
   end
 
   def RB_TYPE_P(value, type)
-    # TODO CS 23-Jul-16 we could do with making this a kind of specialising case
-    # that puts never seen cases behind a transfer
+    rb_type(value) == type
+  end
 
-    case type
-    when T_SYMBOL
-      value.is_a?(Symbol)
-    when T_STRING
-      value.is_a?(String)
-    when T_FIXNUM
-      value.is_a?(Integer) && Truffle::Type.fits_into_long?(value)
-    when T_BIGNUM
-      value.is_a?(Integer) && !Truffle::Type.fits_into_long?(value)
-    when T_ARRAY
-      value.is_a?(Array)
-    when T_FILE
-      value.is_a?(File)
-    when T_HASH
-      value.is_a?(Hash)
-    when T_DATA
-      value.is_a?(Data)
-    when T_FLOAT
-      value.is_a?(Float)
-    when T_CLASS
-      value.is_a?(Class)
+  def RTYPEDDATA_P(value)
+    if hidden_variable_get(value, DATA_HOLDER) && hidden_variable_get(value, :data_type)
+      true
     else
-      raise "unknown type #{type}"
+      false
     end
   end
 
