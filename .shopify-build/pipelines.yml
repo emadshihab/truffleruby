@@ -56,6 +56,10 @@ shared:
     <<: *truffle_run
     label: Run browser_sniffer tests
     run: .shopify-build/test-gem.sh browser_sniffer
+  cacheable_test: &cacheable_test
+    <<: *truffle_run
+    label: Run cacheable tests
+    run: .shopify-build/test-gem.sh cacheable
   i18n_test: &i18n_test
     <<: *truffle_run
     label: Run i18n tests
@@ -106,6 +110,7 @@ pipelines:
       - <<: *truffle_specs
       - <<: *addressable_test
       - <<: *browser_sniffer_test
+      - <<: *cacheable_test
       - <<: *i18n_test
       - <<: *liquid_test
       - <<: *measured_test
@@ -133,6 +138,7 @@ pipelines:
       - <<: *truffle_specs
       - <<: *addressable_test
       - <<: *browser_sniffer_test
+      - <<: *cacheable_test
       - <<: *i18n_test
       - <<: *liquid_test
       - <<: *measured_test
