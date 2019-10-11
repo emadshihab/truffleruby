@@ -575,6 +575,10 @@ module Truffle::CExt
     value
   end
 
+  def context_hash_seed
+    TrufflePrimitive.vm_hash_start(0)
+  end
+
   def rb_obj_classname(object)
     object.class.name
   end
