@@ -2787,7 +2787,6 @@ int rb_tr_writable(int mode) {
   return polyglot_as_boolean(polyglot_invoke(RUBY_CEXT, "rb_tr_writable", mode));
 }
 
-MUST_INLINE
 int rb_io_extract_encoding_option(VALUE opt, rb_encoding **enc_p, rb_encoding **enc2_p, int *fmode_p) {
   // TODO (pitr-ch 12-Jun-2017): review, just approximate implementation
   VALUE encoding = rb_cEncoding;
@@ -3532,15 +3531,18 @@ VALUE rb_class_inherited(VALUE super, VALUE klass) {
 }
 
 VALUE rb_define_class_id(ID id, VALUE super) {
-  rb_tr_error("rb_define_class_id not implemented");
+  if (super == NULL) {
+    super = rb_cObject;
+  }
+  return rb_class_new(super);
 }
 
 VALUE rb_module_new(void) {
-  rb_tr_error("rb_module_new not implemented");
+  return RUBY_CEXT_INVOKE("rb_module_new");
 }
 
 VALUE rb_define_module_id(ID id) {
-  rb_tr_error("rb_define_module_id not implemented");
+  return rb_module_new();
 }
 
 VALUE rb_define_module_id_under(VALUE outer, ID id) {
@@ -3693,7 +3695,7 @@ void rb_remove_method_id(VALUE klass, ID mid) {
 }
 
 rb_alloc_func_t rb_get_alloc_func(VALUE klass) {
-  rb_tr_error("rb_get_alloc_func not implemented");
+  return RUBY_CEXT_INVOKE_NO_WRAP("rb_get_alloc_func", klass);
 }
 
 void rb_clear_constant_cache(void) {
@@ -4357,7 +4359,8 @@ VALUE rb_str_cat_cstr(VALUE str, const char *ptr) {
 }
 
 st_index_t rb_hash_start(st_index_t h) {
-  rb_tr_error("rb_hash_start not implemented");
+  st_index_t seed = (st_index_t) polyglot_as_i64(RUBY_CEXT_INVOKE_NO_WRAP("context_hash_seed"));
+  return seed + h;
 }
 
 int rb_str_hash_cmp(VALUE str1, VALUE str2) {
@@ -4662,7 +4665,8 @@ VALUE rb_newobj(void) {
 }
 
 VALUE rb_newobj_of(VALUE klass, VALUE flags) {
-  rb_tr_error("rb_newobj_of not implemented");
+  // ignore flags for now
+  return RUBY_CEXT_INVOKE("rb_newobj_of", klass);
 }
 
 VALUE rb_obj_setup(VALUE obj, VALUE klass, VALUE type) {
