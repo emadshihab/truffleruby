@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2013, 2017 Oracle and/or its affiliates. All rights reserved. This
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved. This
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  */
@@ -621,14 +621,14 @@ public abstract class HashNodes {
             return self;
         }
 
-        @Specialization(guards = "!isRubyHash(other)")
-        protected DynamicObject replaceCoerce(DynamicObject self, Object other,
+        @Specialization(guards = "!isRubyHash(from)")
+        protected DynamicObject replaceCoerce(DynamicObject self, Object from,
                 @Cached("createPrivate()") CallDispatchHeadNode coerceNode,
                 @Cached InitializeCopyNode initializeCopyNode) {
             final Object otherHash = coerceNode.call(
                     coreLibrary().getTruffleTypeModule(),
                     "coerce_to",
-                    other,
+                    from,
                     coreLibrary().getHashClass(),
                     coreStrings().TO_HASH.getSymbol());
             return initializeCopyNode.executeReplace(self, (DynamicObject) otherHash);
@@ -725,8 +725,8 @@ public abstract class HashNodes {
             return defaultProc;
         }
 
-        @Specialization(guards = "isNil(nil)")
-        protected DynamicObject setDefaultProc(DynamicObject hash, Object nil) {
+        @Specialization(guards = "isNil(defaultProc)")
+        protected DynamicObject setDefaultProc(DynamicObject hash, Object defaultProc) {
             Layouts.HASH.setDefaultValue(hash, nil());
             Layouts.HASH.setDefaultBlock(hash, nil());
             return nil();

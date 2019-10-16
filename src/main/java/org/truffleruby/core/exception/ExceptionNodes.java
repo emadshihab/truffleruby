@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved. This
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved. This
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  */
@@ -146,17 +146,17 @@ public abstract class ExceptionNodes {
          */
         @Specialization(
                 guards = {
-                        "lookupNode.lookup(frame, self, METHOD) == getContext().getCoreMethods().EXCEPTION_BACKTRACE", },
+                        "lookupNode.lookup(frame, exception, METHOD) == getContext().getCoreMethods().EXCEPTION_BACKTRACE", },
                 limit = "1")
-        protected boolean backtraceQuery(VirtualFrame frame, DynamicObject self,
+        protected boolean backtraceQuery(VirtualFrame frame, DynamicObject exception,
                 @Cached LookupMethodNode lookupNode) {
-            final Object customBacktrace = readCustomBacktrace(self);
+            final Object customBacktrace = readCustomBacktrace(exception);
 
-            return !(customBacktrace == null && Layouts.EXCEPTION.getBacktrace(self) == null);
+            return !(customBacktrace == null && Layouts.EXCEPTION.getBacktrace(exception) == null);
         }
 
         @Specialization
-        protected Object fallback(DynamicObject self) {
+        protected Object fallback(DynamicObject exception) {
             return FAILURE;
         }
 
