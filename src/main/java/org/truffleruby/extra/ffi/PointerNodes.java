@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved. This
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved. This
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  */
@@ -139,7 +139,7 @@ public abstract class PointerNodes {
 
     }
 
-    @CoreMethod(names = { "address", "__address__", "to_i" })
+    @CoreMethod(names = { "address", "polyglot_address", "to_i" })
     public static abstract class PointerAddressNode extends CoreMethodArrayArgumentsNode {
 
         @Specialization
@@ -247,8 +247,8 @@ public abstract class PointerNodes {
             return allocate(coreLibrary().getStringClass(), Layouts.STRING.build(false, true, rope));
         }
 
-        @Specialization(guards = "isNil(noLimit)")
-        protected DynamicObject readStringToNull(long address, DynamicObject noLimit,
+        @Specialization(guards = "isNil(limit)")
+        protected DynamicObject readStringToNull(long address, DynamicObject limit,
                 @Cached RopeNodes.MakeLeafRopeNode makeLeafRopeNode) {
             final Pointer ptr = new Pointer(address);
             checkNull(ptr);
