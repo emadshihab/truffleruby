@@ -1,0 +1,13 @@
+diff --git a/ext/nokogumbo/extconf.rb b/ext/nokogumbo/extconf.rb
+index 7f0bbf9..6f4e425 100644
+--- a/ext/nokogumbo/extconf.rb
++++ b/ext/nokogumbo/extconf.rb
+@@ -99,7 +99,7 @@ if !prohibited
+ end
+ 
+ if have_libxml2 and have_ng
+-  $CFLAGS += " -DNGLIB=1"
++  # $CFLAGS += " -DNGLIB=1"
+ end
+ 
+ # Symlink gumbo-parser source files.
