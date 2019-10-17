@@ -81,6 +81,14 @@ shared:
     <<: *truffle_run
     label: Run money tests
     run: .shopify-build/test-gem.sh money
+  nokogiri_test: &nokogiri_test
+    <<: *truffle_run
+    label: Install nokogiri
+    run: .shopify-build/test-gem.sh nokogiri
+  nokogumbo_test: &nokogumbo_test
+    <<: *truffle_run
+    label: Install nokogumbo
+    run: .shopify-build/test-gem.sh nokogumbo
   snappy_test: &snappy_test
     <<: *truffle_run
     label: Run snappy tests
@@ -119,6 +127,8 @@ pipelines:
       - <<: *measured_test
       - <<: *minitest_test
       - <<: *money_test
+      - <<: *nokogiri_test
+      - <<: *nokogumbo_test
       - <<: *snappy_test
       - <<: *statsd_instrument_test
       - block: Produce a tarball artifact
@@ -155,6 +165,8 @@ pipelines:
       - <<: *measured_test
       - <<: *minitest_test
       - <<: *money_test
+      - <<: *nokogiri_test
+      - <<: *nokogumbo_test
       - <<: *snappy_test
       - <<: *statsd_instrument_test
       - block: Produce a tarball artifact
