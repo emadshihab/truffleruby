@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved. This
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved. This
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  */
@@ -54,7 +54,7 @@ public abstract class TruffleGraalNodes {
 
     }
 
-    @CoreMethod(names = "always_split", onSingleton = true, required = 1)
+    @CoreMethod(names = "always_split", onSingleton = true, required = 1, argumentNames = "method_or_proc")
     public abstract static class AlwaysSplitNode extends CoreMethodArrayArgumentsNode {
 
         @TruffleBoundary

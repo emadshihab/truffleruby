@@ -3,7 +3,7 @@
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  *
@@ -601,8 +601,8 @@ public abstract class EncodingNodes {
             return encoding;
         }
 
-        @Specialization(guards = "isNil(nil)")
-        protected DynamicObject noDefaultExternal(DynamicObject nil) {
+        @Specialization(guards = "isNil(encoding)")
+        protected DynamicObject noDefaultExternal(DynamicObject encoding) {
             throw new RaiseException(
                     getContext(),
                     coreExceptions().argumentError("default external can not be nil", this));
@@ -644,25 +644,25 @@ public abstract class EncodingNodes {
 
         @Child private GetRubyEncodingNode getRubyEncodingNode = EncodingNodesFactory.GetRubyEncodingNodeGen.create();
 
-        @Specialization(guards = "isRubyString(string)")
-        protected DynamicObject encodingGetObjectEncodingString(DynamicObject string) {
-            return getRubyEncodingNode.executeGetRubyEncoding(Layouts.STRING.getRope(string).getEncoding());
+        @Specialization(guards = "isRubyString(object)")
+        protected DynamicObject encodingGetObjectEncodingString(DynamicObject object) {
+            return getRubyEncodingNode.executeGetRubyEncoding(Layouts.STRING.getRope(object).getEncoding());
         }
 
-        @Specialization(guards = "isRubySymbol(symbol)")
-        protected DynamicObject encodingGetObjectEncodingSymbol(DynamicObject symbol) {
-            return getRubyEncodingNode.executeGetRubyEncoding(Layouts.SYMBOL.getRope(symbol).getEncoding());
+        @Specialization(guards = "isRubySymbol(object)")
+        protected DynamicObject encodingGetObjectEncodingSymbol(DynamicObject object) {
+            return getRubyEncodingNode.executeGetRubyEncoding(Layouts.SYMBOL.getRope(object).getEncoding());
         }
 
-        @Specialization(guards = "isRubyEncoding(encoding)")
-        protected DynamicObject encodingGetObjectEncoding(DynamicObject encoding) {
-            return encoding;
+        @Specialization(guards = "isRubyEncoding(object)")
+        protected DynamicObject encodingGetObjectEncoding(DynamicObject object) {
+            return object;
         }
 
-        @Specialization(guards = "isRubyRegexp(regexp)")
-        protected DynamicObject encodingGetObjectEncodingRegexp(DynamicObject regexp,
+        @Specialization(guards = "isRubyRegexp(object)")
+        protected DynamicObject encodingGetObjectEncodingRegexp(DynamicObject object,
                 @Cached("createBinaryProfile()") ConditionProfile hasRegexpSource) {
-            final Rope regexpSource = Layouts.REGEXP.getSource(regexp);
+            final Rope regexpSource = Layouts.REGEXP.getSource(object);
 
             if (hasRegexpSource.profile(regexpSource == null)) {
                 return getRubyEncodingNode.executeGetRubyEncoding(EncodingManager.getEncoding("BINARY"));
@@ -703,9 +703,9 @@ public abstract class EncodingNodes {
     public static abstract class EncodingReplicateNode extends EncodingCreationNode {
 
         @Specialization(guards = "isRubyString(nameObject)")
-        protected DynamicObject encodingReplicate(DynamicObject self, DynamicObject nameObject) {
+        protected DynamicObject encodingReplicate(DynamicObject object, DynamicObject nameObject) {
             final String name = StringOperations.getString(nameObject);
-            final Encoding encoding = EncodingOperations.getEncoding(self);
+            final Encoding encoding = EncodingOperations.getEncoding(object);
 
             final DynamicObject newEncoding = replicate(name, encoding);
             return setIndexOrRaiseError(name, newEncoding);

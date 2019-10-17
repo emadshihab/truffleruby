@@ -1,8 +1,17 @@
 #!/bin/bash
 
-ci_step "Installing Homebrew packages"
-# Install TruffleRuby dependencies
-brew install openssl
+# Dependencies needed for building TruffleRuby
 
-# Install dependencies for tests - we'll just install all in all cases at the moment
-brew install cmake libxml2 libxslt memcached pkgconfig snappy sqlite3
+brew install \
+  openssl
+
+# Dependencies only needed for tests
+
+brew install \
+  cmake \
+  libxml2 \
+  libxslt \
+  memcached \
+  pkgconfig \
+  snappy \
+  sqlite3

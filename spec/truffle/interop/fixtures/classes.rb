@@ -1,11 +1,19 @@
+# Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved. This
+# code is released under a tri EPL/GPL/LGPL license. You can use it,
+# redistribute it and/or modify it under the terms of the:
+#
+# Eclipse Public License version 2.0, or
+# GNU General Public License version 2, or
+# GNU Lesser General Public License version 2.1.
+
 module TruffleInteropSpecs
 
   class AsPointerClass
-    def __pointer__?
+    def polyglot_pointer?
       true
     end
 
-    def __address__
+    def polyglot_address
       0x123
     end
   end

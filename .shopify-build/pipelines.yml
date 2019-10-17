@@ -2,6 +2,7 @@
 containers:
   debian:
     includes_source: false
+    workdir: /build/truffleruby-shopify
     environment: build
     build:
       tag_using_path: .shopify-build/Dockerfile.debian
@@ -23,7 +24,7 @@ shared:
   truffle_run: &truffle_run
     timeout: 30m
     cache:
-      - path: dist
+      - path: .shopify-build/build
         required: true
         inherited: false
         upload: false
@@ -96,8 +97,10 @@ pipelines:
       - label: "Build TruffleRuby on Debian"
         high_concurrency: true
         timeout: 90m
+        git:
+          history: shallow
         cache:
-          - path: dist
+          - path: .shopify-build/build
             inherited: false
             scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
         run:
@@ -118,14 +121,22 @@ pipelines:
       - <<: *money_test
       - <<: *snappy_test
       - <<: *statsd_instrument_test
+      - block: Produce a tarball artifact
+      - <<: *truffle_run
+        label: Package
+        run: .shopify-build/package.sh
+        artifact_paths:
+          - .shopify-build/artifacts
 
   truffleruby-shopify-macos:
     default_container: macos
     steps:
-      - label: Build TruffleRuby on MacOS
+      - label: Build TruffleRuby on macOS
         timeout: 90m
+        git:
+          history: shallow
         cache:
-          - path: dist
+          - path: .shopify-build/build
             inherited: false
             scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
         run:
@@ -146,10 +157,10 @@ pipelines:
       - <<: *money_test
       - <<: *snappy_test
       - <<: *statsd_instrument_test
-      - block: Make tarball available as artifact
+      - block: Produce a tarball artifact
       - <<: *truffle_run
-        label: Make a tarball
-        run: .shopify-build/make-artifact-tarball.sh
+        label: Package
+        run: .shopify-build/package.sh
         artifact_paths:
           - .shopify-build/artifacts
       - block: Release to dev
@@ -157,7 +168,7 @@ pipelines:
         timeout: 30m
         container: upload
         cache:
-          - path: dist
+          - path: .shopify-build/build
             required: true
             inherited: false
             upload: false

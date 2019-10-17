@@ -1,8 +1,8 @@
-# Copyright (c) 2015, 2017 Oracle and/or its affiliates. All rights reserved. This
+# Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved. This
 # code is released under a tri EPL/GPL/LGPL license. You can use it,
 # redistribute it and/or modify it under the terms of the:
 #
-# Eclipse Public License version 1.0, or
+# Eclipse Public License version 2.0, or
 # GNU General Public License version 2, or
 # GNU Lesser General Public License version 2.1.
 
@@ -93,7 +93,7 @@ module Truffle::CExt
       @strpointer ||= RStringPtr.new(@encoding.name)
     end
 
-    def __pointer__?
+    def polyglot_pointer?
       true
     end
 
@@ -102,13 +102,13 @@ module Truffle::CExt
       self
     end
 
-    def __address__
+    def polyglot_address
       # TODO (pitr-ch 27-Mar-2019): should be in to_native, and not return pointer? when address is nil
       @address ||= cache_address
     end
 
     def cache_address
-      addr = name.__address__
+      addr = name.polyglot_address
       ENCODING_CACHE_MUTEX.synchronize do
         NATIVE_CACHE[addr] = self
       end
@@ -152,11 +152,11 @@ module Truffle::CExt
       Truffle::CExt.string_pointer_size(@string)
     end
 
-    def __pointer__?
+    def polyglot_pointer?
       true
     end
 
-    def __address__
+    def polyglot_address
       @address ||= Truffle::CExt.string_pointer_to_native(@string)
     end
 
@@ -192,11 +192,11 @@ module Truffle::CExt
       @array.size
     end
 
-    def __pointer__?
+    def polyglot_pointer?
       true
     end
 
-    def __address__
+    def polyglot_address
       raise RuntimeError, 'RARRAY_PTRs cannot be converted to native pointers yet'
     end
 
@@ -227,11 +227,11 @@ module Truffle::CExt
       0
     end
 
-    def __pointer__?
+    def polyglot_pointer?
       true
     end
 
-    def __address__
+    def polyglot_address
       @address ||= Truffle::CExt.string_pointer_to_native(@string) + @string.bytesize
     end
 

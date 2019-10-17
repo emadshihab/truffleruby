@@ -60,6 +60,8 @@ local part_definitions = {
           "MAVEN_OPTS",
           "no_proxy",
         ],
+        # Fail if any command part of the pipe fails
+        ["set", "-o", "pipefail"],
         ["ruby", "--version"],
       ],
 
@@ -310,10 +312,6 @@ local part_definitions = {
 
     test_cexts: {
       is_after+:: ["$.use.common"],
-      environment+: {
-        # GR-18622, for libc++
-        LD_LIBRARY_PATH: "$BUILD_DIR/graal/sulong/mxbuild/SULONG_LLVM_ORG/lib:$LD_LIBRARY_PATH",
-      },
       run+: [
         ["mx", "--dynamicimports", "/sulong", "ruby_testdownstream_sulong"],
       ],
@@ -443,8 +441,8 @@ local composition_environment = utils.add_inclusion_tracking(part_definitions, "
       // Order: platform, jdk, mx_env. Keep aligned for an easy visual comparison.
       "ruby-test-specs-linux":       $.platform.linux  + $.jdk.v8  + $.env.jvm + gate + $.run.test_unit_tck_specs + $.run.test_basictest + { timelimit: "35:00" },
       "ruby-test-specs-linux-11":    $.platform.linux  + $.jdk.v11 + $.env.jvm + gate + $.run.test_unit_tck_specs + $.run.test_basictest + { timelimit: "35:00" },
-      "ruby-test-specs-darwin":      $.platform.darwin + $.jdk.v8  + $.env.jvm + gate + $.run.test_unit_tck_specs + $.run.test_basictest,
-      "ruby-test-specs-darwin-11":   $.platform.darwin + $.jdk.v11 + $.env.jvm + gate + $.run.test_unit_tck_specs + $.run.test_basictest,
+      "ruby-test-specs-darwin":      $.platform.darwin + $.jdk.v8  + $.env.jvm + gate + $.run.test_unit_tck_specs + $.run.test_basictest + { timelimit: "01:10:00" },
+      "ruby-test-specs-darwin-11":   $.platform.darwin + $.jdk.v11 + $.env.jvm + gate + $.run.test_unit_tck_specs + $.run.test_basictest + { timelimit: "01:10:00" },
       "ruby-test-fast-linux":        $.platform.linux  + $.jdk.v8  + $.env.jvm + gate + $.run.test_fast + { timelimit: "30:00" },  # To catch missing slow tags
       "ruby-test-mri-linux":         $.platform.linux  + $.jdk.v8  + $.env.jvm + gate + $.run.test_mri + { timelimit: "30:00" },
       "ruby-test-mri-darwin":        $.platform.darwin + $.jdk.v8  + $.env.jvm + gate + $.run.test_mri,

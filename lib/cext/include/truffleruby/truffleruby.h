@@ -1,9 +1,9 @@
 /*
-* Copyright (c) 2016, 2017 Oracle and/or its affiliates. All rights reserved. This
+* Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved. This
 * code is released under a tri EPL/GPL/LGPL license. You can use it,
 * redistribute it and/or modify it under the terms of the:
 *
-* Eclipse Public License version 1.0
+* Eclipse Public License version 2.0
 * GNU General Public License version 2
 * GNU Lesser General Public License version 2.1
 *
@@ -160,7 +160,7 @@ int rb_encdb_alias(const char *alias, const char *orig);
 VALUE rb_ivar_lookup(VALUE object, const char *name, VALUE default_value);
 
 // Additional macro to make sure the RSTRING_PTR and the bytes are in native memory, for testing.
-#define NATIVE_RSTRING_PTR(str) ((char*) polyglot_as_i64(polyglot_invoke(RSTRING_PTR(str), "__address__")))
+#define NATIVE_RSTRING_PTR(str) ((char*) polyglot_as_i64(polyglot_invoke(RSTRING_PTR(str), "polyglot_address")))
 
 // Inline implementations
 

@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved. This
+ * Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved. This
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  */
@@ -17,10 +17,10 @@ import org.jcodings.specific.UTF8Encoding;
 import org.truffleruby.Layouts;
 import org.truffleruby.RubyContext;
 import org.truffleruby.RubyLanguage;
-import org.truffleruby.builtins.CoreModule;
 import org.truffleruby.builtins.CoreMethod;
 import org.truffleruby.builtins.CoreMethodArrayArgumentsNode;
 import org.truffleruby.builtins.CoreMethodNode;
+import org.truffleruby.builtins.CoreModule;
 import org.truffleruby.builtins.Primitive;
 import org.truffleruby.builtins.PrimitiveArrayArgumentsNode;
 import org.truffleruby.core.array.ArrayGuards;
@@ -1334,9 +1334,9 @@ public abstract class InteropNodes {
     @CoreMethod(names = "java_instanceof?", isModuleFunction = true, required = 2)
     public abstract static class InteropJavaInstanceOfNode extends CoreMethodArrayArgumentsNode {
 
-        @Specialization(guards = { "isJavaObject(boxedInstance)", "isJavaClassOrInterface(boxedJavaClass)" })
-        protected boolean javaInstanceOfJava(Object boxedInstance, TruffleObject boxedJavaClass) {
-            final Object hostInstance = getContext().getEnv().asHostObject(boxedInstance);
+        @Specialization(guards = { "isJavaObject(object)", "isJavaClassOrInterface(boxedJavaClass)" })
+        protected boolean javaInstanceOfJava(Object object, TruffleObject boxedJavaClass) {
+            final Object hostInstance = getContext().getEnv().asHostObject(object);
             if (hostInstance == null) {
                 return false;
             } else {
@@ -1345,10 +1345,10 @@ public abstract class InteropNodes {
             }
         }
 
-        @Specialization(guards = { "!isJavaObject(instance)", "isJavaClassOrInterface(boxedJavaClass)" })
-        protected boolean javaInstanceOfNotJava(Object instance, TruffleObject boxedJavaClass) {
+        @Specialization(guards = { "!isJavaObject(object)", "isJavaClassOrInterface(boxedJavaClass)" })
+        protected boolean javaInstanceOfNotJava(Object object, TruffleObject boxedJavaClass) {
             final Class<?> javaClass = (Class<?>) getContext().getEnv().asHostObject(boxedJavaClass);
-            return javaClass.isInstance(instance);
+            return javaClass.isInstance(object);
         }
 
         protected boolean isJavaObject(Object object) {
@@ -1399,8 +1399,8 @@ public abstract class InteropNodes {
                     Layouts.ARRAY.getSize(array)));
         }
 
-        @Specialization(guards = "!isRubyArray(object)")
-        protected Object coerce(DynamicObject object) {
+        @Specialization(guards = "!isRubyArray(array)")
+        protected Object coerce(DynamicObject array) {
             return FAILURE;
         }
 
@@ -1419,8 +1419,8 @@ public abstract class InteropNodes {
                     Layouts.ARRAY.getSize(array))));
         }
 
-        @Specialization(guards = "!isRubyArray(object)")
-        protected Object coerce(DynamicObject object) {
+        @Specialization(guards = "!isRubyArray(array)")
+        protected Object coerce(DynamicObject array) {
             return FAILURE;
         }
 

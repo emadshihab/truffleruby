@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2015, 2017 Oracle and/or its affiliates. All rights reserved. This
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved. This
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  */
@@ -89,9 +89,9 @@ public abstract class TypeNodes {
         public abstract DynamicObject executeGetIVars(Object self);
 
         @TruffleBoundary
-        @Specialization(guards = { "!isNil(self)", "!isRubySymbol(self)" })
-        protected DynamicObject instanceVariables(DynamicObject self) {
-            Shape shape = self.getShape();
+        @Specialization(guards = { "!isNil(object)", "!isRubySymbol(object)" })
+        protected DynamicObject instanceVariables(DynamicObject object) {
+            Shape shape = object.getShape();
             List<String> names = new ArrayList<>();
 
             for (Property property : shape.getProperties()) {
@@ -114,17 +114,17 @@ public abstract class TypeNodes {
         }
 
         @Specialization
-        protected DynamicObject instanceVariables(int self) {
+        protected DynamicObject instanceVariables(int object) {
             return createArray(ArrayStrategy.NULL_ARRAY_STORE, 0);
         }
 
         @Specialization
-        protected DynamicObject instanceVariables(long self) {
+        protected DynamicObject instanceVariables(long object) {
             return createArray(ArrayStrategy.NULL_ARRAY_STORE, 0);
         }
 
         @Specialization
-        protected DynamicObject instanceVariables(boolean self) {
+        protected DynamicObject instanceVariables(boolean object) {
             return createArray(ArrayStrategy.NULL_ARRAY_STORE, 0);
         }
 
@@ -198,8 +198,8 @@ public abstract class TypeNodes {
             return true;
         }
 
-        @Specialization(guards = "!isRubyArray(object)")
-        protected boolean other(Object object) {
+        @Specialization(guards = "!isRubyArray(array)")
+        protected boolean other(Object array) {
             return true;
         }
 
