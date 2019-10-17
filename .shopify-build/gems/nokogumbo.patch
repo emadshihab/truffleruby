@@ -1,3 +1,16 @@
+diff --git a/Rakefile b/Rakefile
+index 94200be..3ec98b6 100644
+--- a/Rakefile
++++ b/Rakefile
+@@ -10,7 +10,7 @@ require 'nokogumbo/version'
+ # default to running tests
+ task default: :test
+ task test: :compile
+-task gem: :test
++# task gem: :test
+ 
+ ext = Rake::ExtensionTask.new 'nokogumbo' do |e|
+   e.lib_dir = 'lib/nokogumbo'
 diff --git a/ext/nokogumbo/extconf.rb b/ext/nokogumbo/extconf.rb
 index 7f0bbf9..6f4e425 100644
 --- a/ext/nokogumbo/extconf.rb

@@ -99,7 +99,7 @@ shared:
     run: .shopify-build/test-gem.sh statsd-instrument
   storefront_renderer: &storefront_renderer
     <<: *truffle_run
-    label: Run storefront_renderer tests
+    label: Install storefront_renderer
     run: .shopify-build/test-gem.sh storefront-renderer
 
 pipelines:

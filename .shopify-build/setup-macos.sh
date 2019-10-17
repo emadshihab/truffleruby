@@ -8,7 +8,10 @@ brew install \
 # Dependencies only needed for tests
 
 brew install \
+  autoconf \
+  automake \
   cmake \
+  libtool \
   libxml2 \
   libxslt \
   memcached \
