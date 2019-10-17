@@ -1,8 +1,8 @@
-# Copyright (c) 2015, 2017 Oracle and/or its affiliates. All rights reserved. This
+# Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved. This
 # code is released under a tri EPL/GPL/LGPL license. You can use it,
 # redistribute it and/or modify it under the terms of the:
 #
-# Eclipse Public License version 1.0, or
+# Eclipse Public License version 2.0, or
 # GNU General Public License version 2, or
 # GNU Lesser General Public License version 2.1.
 
@@ -13,6 +13,7 @@ module Truffle::CExt
 
   DATA_HOLDER = Object.new
   DATA_MEMSIZER = Object.new
+  ALLOCATOR_FUNC = Object.new
 
   extend self
 
@@ -92,7 +93,7 @@ module Truffle::CExt
       @strpointer ||= RStringPtr.new(@encoding.name)
     end
 
-    def __pointer__?
+    def polyglot_pointer?
       true
     end
 
@@ -101,13 +102,13 @@ module Truffle::CExt
       self
     end
 
-    def __address__
+    def polyglot_address
       # TODO (pitr-ch 27-Mar-2019): should be in to_native, and not return pointer? when address is nil
       @address ||= cache_address
     end
 
     def cache_address
-      addr = name.__address__
+      addr = name.polyglot_address
       ENCODING_CACHE_MUTEX.synchronize do
         NATIVE_CACHE[addr] = self
       end
@@ -151,11 +152,11 @@ module Truffle::CExt
       Truffle::CExt.string_pointer_size(@string)
     end
 
-    def __pointer__?
+    def polyglot_pointer?
       true
     end
 
-    def __address__
+    def polyglot_address
       @address ||= Truffle::CExt.string_pointer_to_native(@string)
     end
 
@@ -191,11 +192,11 @@ module Truffle::CExt
       @array.size
     end
 
-    def __pointer__?
+    def polyglot_pointer?
       true
     end
 
-    def __address__
+    def polyglot_address
       raise RuntimeError, 'RARRAY_PTRs cannot be converted to native pointers yet'
     end
 
@@ -226,11 +227,11 @@ module Truffle::CExt
       0
     end
 
-    def __pointer__?
+    def polyglot_pointer?
       true
     end
 
-    def __address__
+    def polyglot_address
       @address ||= Truffle::CExt.string_pointer_to_native(@string) + @string.bytesize
     end
 
@@ -573,6 +574,10 @@ module Truffle::CExt
 
   def RFLOAT_VALUE(value)
     value
+  end
+
+  def context_hash_seed
+    TrufflePrimitive.vm_hash_start(0)
   end
 
   def rb_obj_classname(object)
@@ -1290,6 +1295,13 @@ module Truffle::CExt
     eval(str)
   end
 
+  BASIC_ALLOC = ::BasicObject.singleton_class.instance_method(:__allocate__)
+
+  def rb_newobj_of(ruby_class)
+    # we need to bypass __allocate__ on ruby_class
+    BASIC_ALLOC.bind(ruby_class).call
+  end
+
   def rb_define_alloc_func(ruby_class, function)
     ruby_class.singleton_class.define_method(:__allocate__) do
       TrufflePrimitive.cext_unwrap(TrufflePrimitive.call_with_c_mutex(function, [TrufflePrimitive.cext_wrap(self)]))
@@ -1297,10 +1309,26 @@ module Truffle::CExt
     class << ruby_class
       private :__allocate__
     end
+    hidden_variable_set(ruby_class.singleton_class, ALLOCATOR_FUNC, function)
+  end
+
+  def rb_get_alloc_func(ruby_class)
+    return nil unless Class === ruby_class
+    begin
+      allocate_method = ruby_class.method(:__allocate__).owner
+    rescue NameError
+      nil
+    else
+      hidden_variable_get(allocate_method, ALLOCATOR_FUNC)
+    end
   end
 
   def rb_undef_alloc_func(ruby_class)
     ruby_class.singleton_class.send(:undef_method, :__allocate__)
+  rescue NameError
+    # it's fine to call this on a class that doesn't have an allocator
+  else
+    hidden_variable_set(ruby_class.singleton_class, ALLOCATOR_FUNC, nil)
   end
 
   def rb_alias(mod, new_name, old_name)
@@ -1523,15 +1551,20 @@ module Truffle::CExt
   end
 
   def rb_block_call(object, method, args, func, data)
+    outer_self = self
     object.__send__(method, *args) do |*block_args|
       TrufflePrimitive.cext_unwrap(TrufflePrimitive.call_with_c_mutex(func, [
           TrufflePrimitive.cext_wrap(block_args.first),
           data,
           block_args.size, # argc
-          RARRAY_PTR(block_args), # argv
+          outer_self.RARRAY_PTR(block_args), # argv
           nil, # blockarg
       ]))
     end
+  end
+
+  def rb_module_new
+    Module.new
   end
 
   def rb_ensure(b_proc, data1, e_proc, data2)

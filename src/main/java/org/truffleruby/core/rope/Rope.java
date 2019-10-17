@@ -3,7 +3,7 @@
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  */
@@ -16,6 +16,9 @@ import org.jcodings.Encoding;
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 
 public abstract class Rope {
+
+    // NativeRope, RepeatingRope, 3 LeafRope, ConcatRope, SubstringRope, 1 LazyRope
+    public static final int NUMBER_OF_CONCRETE_CLASSES = 8;
 
     // Useful for debugging. Setting to false allow to catch wrong usages.
     protected static final boolean ALLOW_TO_STRING = true;

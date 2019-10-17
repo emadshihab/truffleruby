@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2013, 2017 Oracle and/or its affiliates. All rights reserved. This
+ * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved. This
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  */
@@ -141,8 +141,8 @@ public class RubyObjectType extends ObjectType {
 
         // TODO (pitr-ch 18-Mar-2019): branchProfile?
         // FIXME (pitr 26-Mar-2019): the method should have a prefix, or a marker module
-        if (respondNode.doesRespondTo(null, "__pointer__?", receiver)) {
-            return booleanCastNode.executeToBoolean(dispatchNode.call(receiver, "__pointer__?"));
+        if (respondNode.doesRespondTo(null, "polyglot_pointer?", receiver)) {
+            return booleanCastNode.executeToBoolean(dispatchNode.call(receiver, "polyglot_pointer?"));
         } else {
             return false;
         }
@@ -160,8 +160,8 @@ public class RubyObjectType extends ObjectType {
             @Cached LongCastNode longCastNode) throws UnsupportedMessageException {
 
         // FIXME (pitr 26-Mar-2019): the method should have a prefix, or a marker module
-        if (respondNode.doesRespondTo(null, "__address__", receiver)) {
-            return longCastNode.executeCastLong(dispatchNode.call(receiver, "__address__"));
+        if (respondNode.doesRespondTo(null, "polyglot_address", receiver)) {
+            return longCastNode.executeCastLong(dispatchNode.call(receiver, "polyglot_address"));
         } else {
             throw UnsupportedMessageException.create();
         }

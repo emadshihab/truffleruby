@@ -1,9 +1,20 @@
 #!/bin/bash
 
-ci_step "Installing Homebrew packages"
-# Install TruffleRuby dependencies
-brew install openssl
+# Dependencies needed for building TruffleRuby
 
-# Install dependencies for tests - we'll just install all in all cases at the moment
-brew install libxml2 libxslt memcached pkgconfig sqlite3 mysql
+brew install \
+  openssl
+
+# Dependencies only needed for tests
+
+brew install \
+  cmake \
+  libxml2 \
+  libxslt \
+  memcached \
+  pkgconfig \
+  snappy \
+  sqlite3 \
+  mysql
+
 bundle config --global build.mysql2 --with-opt-dir="$(brew --prefix openssl)"

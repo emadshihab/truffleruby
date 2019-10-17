@@ -4,7 +4,7 @@
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  */
@@ -160,8 +160,6 @@ public class Options {
     public final boolean LAZY_TRANSLATION_CORE;
     /** --basic-ops-inline=true */
     public final boolean BASICOPS_INLINE;
-    /** --rope-lazy-substrings=true */
-    public final boolean ROPE_LAZY_SUBSTRINGS;
     /** --default-cache=8 */
     public final int DEFAULT_CACHE;
     /** --method-lookup-cache=DEFAULT_CACHE */
@@ -200,8 +198,6 @@ public class Options {
     public final int ENCODING_LOADED_CLASSES_CACHE;
     /** --thread-cache=DEFAULT_CACHE */
     public final int THREAD_CACHE;
-    /** --rope-class-cache=8 */
-    public final int ROPE_CLASS_CACHE;
     /** --interop-convert-cache=DEFAULT_CACHE */
     public final int INTEROP_CONVERT_CACHE;
     /** --interop-execute-cache=DEFAULT_CACHE */
@@ -339,7 +335,6 @@ public class Options {
         LAZY_CORE_METHOD_NODES = options.hasBeenSet(OptionsCatalog.LAZY_CORE_METHOD_NODES_KEY) ? options.get(OptionsCatalog.LAZY_CORE_METHOD_NODES_KEY) : DEFAULT_LAZY;
         LAZY_TRANSLATION_CORE = options.hasBeenSet(OptionsCatalog.LAZY_TRANSLATION_CORE_KEY) ? options.get(OptionsCatalog.LAZY_TRANSLATION_CORE_KEY) : DEFAULT_LAZY;
         BASICOPS_INLINE = options.get(OptionsCatalog.BASICOPS_INLINE_KEY);
-        ROPE_LAZY_SUBSTRINGS = options.get(OptionsCatalog.ROPE_LAZY_SUBSTRINGS_KEY);
         DEFAULT_CACHE = options.get(OptionsCatalog.DEFAULT_CACHE_KEY);
         METHOD_LOOKUP_CACHE = options.hasBeenSet(OptionsCatalog.METHOD_LOOKUP_CACHE_KEY) ? options.get(OptionsCatalog.METHOD_LOOKUP_CACHE_KEY) : DEFAULT_CACHE;
         DISPATCH_CACHE = options.hasBeenSet(OptionsCatalog.DISPATCH_CACHE_KEY) ? options.get(OptionsCatalog.DISPATCH_CACHE_KEY) : DEFAULT_CACHE;
@@ -359,7 +354,6 @@ public class Options {
         ENCODING_COMPATIBLE_QUERY_CACHE = options.hasBeenSet(OptionsCatalog.ENCODING_COMPATIBLE_QUERY_CACHE_KEY) ? options.get(OptionsCatalog.ENCODING_COMPATIBLE_QUERY_CACHE_KEY) : DEFAULT_CACHE;
         ENCODING_LOADED_CLASSES_CACHE = options.hasBeenSet(OptionsCatalog.ENCODING_LOADED_CLASSES_CACHE_KEY) ? options.get(OptionsCatalog.ENCODING_LOADED_CLASSES_CACHE_KEY) : DEFAULT_CACHE;
         THREAD_CACHE = options.hasBeenSet(OptionsCatalog.THREAD_CACHE_KEY) ? options.get(OptionsCatalog.THREAD_CACHE_KEY) : DEFAULT_CACHE;
-        ROPE_CLASS_CACHE = options.get(OptionsCatalog.ROPE_CLASS_CACHE_KEY);
         INTEROP_CONVERT_CACHE = options.hasBeenSet(OptionsCatalog.INTEROP_CONVERT_CACHE_KEY) ? options.get(OptionsCatalog.INTEROP_CONVERT_CACHE_KEY) : DEFAULT_CACHE;
         INTEROP_EXECUTE_CACHE = options.hasBeenSet(OptionsCatalog.INTEROP_EXECUTE_CACHE_KEY) ? options.get(OptionsCatalog.INTEROP_EXECUTE_CACHE_KEY) : DEFAULT_CACHE;
         INTEROP_INVOKE_CACHE = options.hasBeenSet(OptionsCatalog.INTEROP_INVOKE_CACHE_KEY) ? options.get(OptionsCatalog.INTEROP_INVOKE_CACHE_KEY) : DEFAULT_CACHE;
@@ -535,8 +529,6 @@ public class Options {
                 return LAZY_TRANSLATION_CORE;
             case "ruby.basic-ops-inline":
                 return BASICOPS_INLINE;
-            case "ruby.rope-lazy-substrings":
-                return ROPE_LAZY_SUBSTRINGS;
             case "ruby.default-cache":
                 return DEFAULT_CACHE;
             case "ruby.method-lookup-cache":
@@ -575,8 +567,6 @@ public class Options {
                 return ENCODING_LOADED_CLASSES_CACHE;
             case "ruby.thread-cache":
                 return THREAD_CACHE;
-            case "ruby.rope-class-cache":
-                return ROPE_CLASS_CACHE;
             case "ruby.interop-convert-cache":
                 return INTEROP_CONVERT_CACHE;
             case "ruby.interop-execute-cache":

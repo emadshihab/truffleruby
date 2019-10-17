@@ -1,6 +1,11 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update
+
+# Dependencies needed for building TruffleRuby
+
+RUN apt-get install -y \
+  curl \
   clang \
   g++ \
   gcc \
@@ -14,12 +19,16 @@ RUN apt-get update && apt-get install -y \
   openjdk-8-jdk \
   openjdk-8-source \
   python \
-  ruby \
-  sudo
+  ruby
+
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 # Dependencies only needed for tests
 
 RUN apt-get install -y \
+  cmake \
+  libsnappy-dev \
   libsqlite3-dev \
   libmysqlclient-dev \
   libxml2-dev \
@@ -27,13 +36,8 @@ RUN apt-get install -y \
   memcached \
   pkg-config
 
-RUN locale-gen en_US.UTF-8
-ENV LANG=en_US.UTF-8
-
 WORKDIR /build
 RUN useradd -p '' -ms /bin/bash build
 RUN echo "build ALL=(ALL) ALL" > /etc/sudoers
 RUN chown build /build
 USER build
-
-CMD ./build-linux.sh

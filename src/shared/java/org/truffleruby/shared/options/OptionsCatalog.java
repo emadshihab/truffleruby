@@ -4,7 +4,7 @@
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  */
@@ -89,7 +89,6 @@ public class OptionsCatalog {
     public static final OptionKey<Boolean> LAZY_CORE_METHOD_NODES_KEY = new OptionKey<>(DEFAULT_LAZY_KEY.getDefaultValue());
     public static final OptionKey<Boolean> LAZY_TRANSLATION_CORE_KEY = new OptionKey<>(DEFAULT_LAZY_KEY.getDefaultValue());
     public static final OptionKey<Boolean> BASICOPS_INLINE_KEY = new OptionKey<>(true);
-    public static final OptionKey<Boolean> ROPE_LAZY_SUBSTRINGS_KEY = new OptionKey<>(true);
     public static final OptionKey<Integer> DEFAULT_CACHE_KEY = new OptionKey<>(8);
     public static final OptionKey<Integer> METHOD_LOOKUP_CACHE_KEY = new OptionKey<>(DEFAULT_CACHE_KEY.getDefaultValue());
     public static final OptionKey<Integer> DISPATCH_CACHE_KEY = new OptionKey<>(DEFAULT_CACHE_KEY.getDefaultValue());
@@ -109,7 +108,6 @@ public class OptionsCatalog {
     public static final OptionKey<Integer> ENCODING_COMPATIBLE_QUERY_CACHE_KEY = new OptionKey<>(DEFAULT_CACHE_KEY.getDefaultValue());
     public static final OptionKey<Integer> ENCODING_LOADED_CLASSES_CACHE_KEY = new OptionKey<>(DEFAULT_CACHE_KEY.getDefaultValue());
     public static final OptionKey<Integer> THREAD_CACHE_KEY = new OptionKey<>(DEFAULT_CACHE_KEY.getDefaultValue());
-    public static final OptionKey<Integer> ROPE_CLASS_CACHE_KEY = new OptionKey<>(8);
     public static final OptionKey<Integer> INTEROP_CONVERT_CACHE_KEY = new OptionKey<>(DEFAULT_CACHE_KEY.getDefaultValue());
     public static final OptionKey<Integer> INTEROP_EXECUTE_CACHE_KEY = new OptionKey<>(DEFAULT_CACHE_KEY.getDefaultValue());
     public static final OptionKey<Integer> INTEROP_INVOKE_CACHE_KEY = new OptionKey<>(DEFAULT_CACHE_KEY.getDefaultValue());
@@ -627,13 +625,6 @@ public class OptionsCatalog {
             .stability(OptionStability.EXPERIMENTAL)
             .build();
 
-    public static final OptionDescriptor ROPE_LAZY_SUBSTRINGS = OptionDescriptor
-            .newBuilder(ROPE_LAZY_SUBSTRINGS_KEY, "ruby.rope-lazy-substrings")
-            .help("Indicates whether a substring operation on a rope should be performed lazily")
-            .category(OptionCategory.INTERNAL)
-            .stability(OptionStability.EXPERIMENTAL)
-            .build();
-
     public static final OptionDescriptor DEFAULT_CACHE = OptionDescriptor
             .newBuilder(DEFAULT_CACHE_KEY, "ruby.default-cache")
             .help("Default size for caches")
@@ -763,13 +754,6 @@ public class OptionsCatalog {
     public static final OptionDescriptor THREAD_CACHE = OptionDescriptor
             .newBuilder(THREAD_CACHE_KEY, "ruby.thread-cache")
             .help("Cache size of operations that depend on a particular thread")
-            .category(OptionCategory.INTERNAL)
-            .stability(OptionStability.EXPERIMENTAL)
-            .build();
-
-    public static final OptionDescriptor ROPE_CLASS_CACHE = OptionDescriptor
-            .newBuilder(ROPE_CLASS_CACHE_KEY, "ruby.rope-class-cache")
-            .help("Cache size for rope operations that depend on a concrete rope implementation to avoid virtual calls")
             .category(OptionCategory.INTERNAL)
             .stability(OptionStability.EXPERIMENTAL)
             .build();
@@ -1145,8 +1129,6 @@ public class OptionsCatalog {
                 return LAZY_TRANSLATION_CORE;
             case "ruby.basic-ops-inline":
                 return BASICOPS_INLINE;
-            case "ruby.rope-lazy-substrings":
-                return ROPE_LAZY_SUBSTRINGS;
             case "ruby.default-cache":
                 return DEFAULT_CACHE;
             case "ruby.method-lookup-cache":
@@ -1185,8 +1167,6 @@ public class OptionsCatalog {
                 return ENCODING_LOADED_CLASSES_CACHE;
             case "ruby.thread-cache":
                 return THREAD_CACHE;
-            case "ruby.rope-class-cache":
-                return ROPE_CLASS_CACHE;
             case "ruby.interop-convert-cache":
                 return INTEROP_CONVERT_CACHE;
             case "ruby.interop-execute-cache":
@@ -1329,7 +1309,6 @@ public class OptionsCatalog {
             LAZY_CORE_METHOD_NODES,
             LAZY_TRANSLATION_CORE,
             BASICOPS_INLINE,
-            ROPE_LAZY_SUBSTRINGS,
             DEFAULT_CACHE,
             METHOD_LOOKUP_CACHE,
             DISPATCH_CACHE,
@@ -1349,7 +1328,6 @@ public class OptionsCatalog {
             ENCODING_COMPATIBLE_QUERY_CACHE,
             ENCODING_LOADED_CLASSES_CACHE,
             THREAD_CACHE,
-            ROPE_CLASS_CACHE,
             INTEROP_CONVERT_CACHE,
             INTEROP_EXECUTE_CACHE,
             INTEROP_INVOKE_CACHE,

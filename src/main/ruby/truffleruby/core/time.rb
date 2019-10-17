@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved. This
+# Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved. This
 # code is released under a tri EPL/GPL/LGPL license. You can use it,
 # redistribute it and/or modify it under the terms of the:
 #
-# Eclipse Public License version 1.0, or
+# Eclipse Public License version 2.0, or
 # GNU General Public License version 2, or
 # GNU Lesser General Public License version 2.1.
 
@@ -273,7 +273,7 @@ class Time
   private :_dump
 
   class << self
-    def at(sec, usec=undefined)
+    def at(sec, usec=undefined, unit=undefined)
       if undefined.equal?(usec)
         if sec.kind_of?(Time)
           copy = allocate
@@ -288,6 +288,17 @@ class Time
         raise TypeError, "can't convert Time into an exact number"
       end
 
+      second_arg_scale =
+        if undefined.equal?(unit) || :microsecond == unit || :usec == unit
+          1_000
+        elsif :millisecond == unit
+          1_000_000
+        elsif :nanosecond == unit || :nsec == unit
+          1
+        else
+          raise ArgumentError, "unexpected unit: #{unit}"
+        end
+
       usec = 0 if undefined.equal?(usec)
 
       s = Truffle::Type.coerce_to_exact_num(sec)
@@ -297,7 +308,7 @@ class Time
       nsec_frac = s % 1.0
 
       sec -= 1 if s < 0 && nsec_frac > 0
-      nsec = (nsec_frac * 1_000_000_000 + 0.5).to_i + (u * 1000).to_i
+      nsec = (nsec_frac * 1_000_000_000 + 0.5).to_i + (u * second_arg_scale).to_i
 
       sec += nsec / 1_000_000_000
       nsec %= 1_000_000_000

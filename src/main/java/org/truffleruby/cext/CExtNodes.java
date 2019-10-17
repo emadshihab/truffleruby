@@ -3,7 +3,7 @@
  * code is released under a tri EPL/GPL/LGPL license. You can use it,
  * redistribute it and/or modify it under the terms of the:
  *
- * Eclipse Public License version 1.0, or
+ * Eclipse Public License version 2.0, or
  * GNU General Public License version 2, or
  * GNU Lesser General Public License version 2.1.
  */
@@ -925,8 +925,8 @@ public class CExtNodes {
     @CoreMethod(names = "rb_syserr_fail", onSingleton = true, required = 2, lowerFixnum = 1)
     public abstract static class RbSysErrFail extends CoreMethodArrayArgumentsNode {
 
-        @Specialization(guards = "isNil(nil)")
-        protected Object rbSysErrFailNoMessage(int errno, DynamicObject nil) {
+        @Specialization(guards = "isNil(message)")
+        protected Object rbSysErrFailNoMessage(int errno, DynamicObject message) {
             throw new RaiseException(getContext(), coreExceptions().errnoError(errno, "", this));
         }
 
