@@ -83,11 +83,11 @@ shared:
     run: .shopify-build/test-gem.sh money
   nokogiri_test: &nokogiri_test
     <<: *truffle_run
-    label: Run nokogiri tests
+    label: Install nokogiri
     run: .shopify-build/test-gem.sh nokogiri
   nokogumbo_test: &nokogumbo_test
     <<: *truffle_run
-    label: Run nokogumbo tests
+    label: Install nokogumbo
     run: .shopify-build/test-gem.sh nokogumbo
   snappy_test: &snappy_test
     <<: *truffle_run
