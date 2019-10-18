@@ -25,6 +25,7 @@ import org.truffleruby.collections.Memo;
 import org.truffleruby.core.rope.CodeRange;
 import org.truffleruby.core.string.StringNodes;
 import org.truffleruby.core.string.StringOperations;
+import org.truffleruby.language.control.JavaException;
 import org.truffleruby.language.control.RaiseException;
 import org.truffleruby.language.dispatch.CallDispatchHeadNode;
 import org.truffleruby.language.loader.CodeLoader;
@@ -207,9 +208,7 @@ public abstract class TruffleBootNodes {
                         throw new IllegalStateException();
                 }
             } catch (IOException e) {
-                throw new RaiseException(
-                        getContext(),
-                        getContext().getCoreExceptions().ioError(e.getMessage(), toExecute, null));
+                throw new JavaException(e);
             }
 
             getContext().getCoreLibrary().getGlobalVariables().getStorage("$0").setValueInternal(dollarZeroValue);
@@ -392,10 +391,16 @@ public abstract class TruffleBootNodes {
     @CoreMethod(names = "tool_path", onSingleton = true, required = 1)
     public abstract static class ToolPathNode extends CoreMethodArrayArgumentsNode {
 
+        @TruffleBoundary
         @Specialization(guards = "isRubySymbol(toolName)")
         protected DynamicObject toolPath(DynamicObject toolName,
                 @Cached StringNodes.MakeStringNode makeStringNode) {
             final LanguageInfo llvmInfo = getContext().getEnv().getInternalLanguages().get("llvm");
+            if (llvmInfo == null) {
+                throw new RaiseException(
+                        getContext(),
+                        coreExceptions().runtimeError("Could not find Sulong in internal languages", this));
+            }
             final Toolchain toolchain = getContext().getEnv().lookup(llvmInfo, Toolchain.class);
             if (toolchain == null) {
                 throw new RaiseException(
