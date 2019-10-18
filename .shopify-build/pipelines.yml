@@ -97,6 +97,10 @@ shared:
     <<: *truffle_run
     label: Run statsd-instrument tests
     run: .shopify-build/test-gem.sh statsd-instrument
+  storefront_renderer: &storefront_renderer
+    <<: *truffle_run
+    label: Install storefront_renderer
+    run: .shopify-build/test-gem.sh storefront-renderer
 
 pipelines:
   truffleruby-shopify-debian:
@@ -131,6 +135,7 @@ pipelines:
       - <<: *nokogumbo_test
       - <<: *snappy_test
       - <<: *statsd_instrument_test
+      - <<: *storefront_renderer
       - block: Produce a tarball artifact
       - <<: *truffle_run
         label: Package
@@ -169,6 +174,7 @@ pipelines:
       - <<: *nokogumbo_test
       - <<: *snappy_test
       - <<: *statsd_instrument_test
+      - <<: *storefront_renderer
       - block: Produce a tarball artifact
       - <<: *truffle_run
         label: Package
