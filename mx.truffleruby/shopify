@@ -3,4 +3,4 @@ COMPONENTS=TruffleRuby,SubstrateVM,LibGraal
 DISABLE_INSTALLABLES=true
 LIBGRAAL=true
 EXCLUDE_COMPONENTS=nju
-FORCE_BASH_LAUNCHERS=polyglot,lli,native-image,graalvm-native-clang++,native-image-configure,graalvm-native-clang,gu
+FORCE_BASH_LAUNCHERS=polyglot,lli,native-image,graalvm-native-clang++,native-image-configure,graalvm-native-clang,gu,graalvm-native-ld
