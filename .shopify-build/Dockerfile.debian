@@ -16,6 +16,7 @@ RUN apt-get install -y \
   libz-dev \
   locales \
   make \
+  unzip \
   openjdk-8-jdk \
   openjdk-8-source \
   python \

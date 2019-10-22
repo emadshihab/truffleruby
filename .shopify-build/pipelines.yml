@@ -89,6 +89,10 @@ shared:
     <<: *truffle_run
     label: Install nokogumbo
     run: .shopify-build/test-gem.sh nokogumbo
+  protobuf_test: &protobuf_test
+    <<: *truffle_run
+    label: Run google-protobuf tests
+    run: .shopify-build/test-gem.sh protobuf
   snappy_test: &snappy_test
     <<: *truffle_run
     label: Run snappy tests
@@ -135,6 +139,7 @@ pipelines:
       - <<: *nokogumbo_test
       - <<: *snappy_test
       - <<: *statsd_instrument_test
+      - <<: *protobuf_test
       - <<: *storefront_renderer
       - block: Produce a tarball artifact
       - <<: *truffle_run
@@ -174,6 +179,7 @@ pipelines:
       - <<: *nokogumbo_test
       - <<: *snappy_test
       - <<: *statsd_instrument_test
+      - <<: *protobuf_test
       - <<: *storefront_renderer
       - block: Produce a tarball artifact
       - <<: *truffle_run

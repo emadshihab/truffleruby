@@ -1,0 +1,50 @@
+From c908b3b1ca8f433df42ed9c3cc1f305970ee7956 Mon Sep 17 00:00:00 2001
+From: Alan Wu <XrXr@users.noreply.github.com>
+Date: Tue, 15 Oct 2019 10:34:04 -0400
+Subject: [PATCH 3/4] skip slow tests
+
+---
+ ruby/tests/basic.rb        | 1 +
+ ruby/tests/common_tests.rb | 1 +
+ ruby/tests/stress.rb       | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/ruby/tests/basic.rb b/ruby/tests/basic.rb
+index 1b62cd062..3f9b6f10f 100644
+--- a/ruby/tests/basic.rb
++++ b/ruby/tests/basic.rb
+@@ -235,6 +235,7 @@ module BasicTest
+     end
+ 
+     def test_concurrent_decoding
++      omit("too slow")
+       o = Outer.new
+       o.items[0] = Inner.new
+       raw = Outer.encode(o)
+diff --git a/ruby/tests/common_tests.rb b/ruby/tests/common_tests.rb
+index b1d1d6cde..a83c6a3d1 100644
+--- a/ruby/tests/common_tests.rb
++++ b/ruby/tests/common_tests.rb
+@@ -1012,6 +1012,7 @@ module CommonTests
+   end
+ 
+   def test_stress_test
++    omit("slow")
+     m = proto_module::TestMessage.new
+     m.optional_int32 = 42
+     m.optional_int64 = 0x100000000
+diff --git a/ruby/tests/stress.rb b/ruby/tests/stress.rb
+index 082d5e22d..fb6963b6c 100644
+--- a/ruby/tests/stress.rb
++++ b/ruby/tests/stress.rb
+@@ -25,6 +25,7 @@ module StressTest
+                              M.new(:foo => "world")])
+     end
+     def test_stress
++      omit("too slow")
+       m = get_msg
+       data = TestMessage.encode(m)
+       100_000.times do
+-- 
+2.19.1
+
