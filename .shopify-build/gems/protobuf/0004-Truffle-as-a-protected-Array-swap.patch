@@ -1,0 +1,25 @@
+From 522c44added6fd3e0f19b6e1546cee97e9aed128 Mon Sep 17 00:00:00 2001
+From: Alan Wu <XrXr@users.noreply.github.com>
+Date: Tue, 15 Oct 2019 10:34:47 -0400
+Subject: [PATCH 4/4] Truffle as a protected Array#swap
+
+---
+ ruby/tests/repeated_field_test.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ruby/tests/repeated_field_test.rb b/ruby/tests/repeated_field_test.rb
+index ced9de838..1548fee15 100644
+--- a/ruby/tests/repeated_field_test.rb
++++ b/ruby/tests/repeated_field_test.rb
+@@ -18,7 +18,7 @@ class RepeatedFieldTest < Test::Unit::TestCase
+     # jRuby additions to the Array class that we can ignore
+     arr_methods -= [ :indices, :iter_for_each, :iter_for_each_index,
+       :iter_for_each_with_index, :dimensions, :copy_data, :copy_data_simple,
+-      :nitems, :iter_for_reverse_each, :indexes, :append, :prepend]
++      :nitems, :iter_for_reverse_each, :indexes, :append, :prepend, :swap]
+     arr_methods -= [:union, :difference, :filter!]
+     arr_methods.each do |method_name|
+       assert m.repeated_string.respond_to?(method_name) == true, "does not respond to #{method_name}"
+-- 
+2.19.1
+

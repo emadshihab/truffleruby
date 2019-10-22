@@ -1,0 +1,32 @@
+From e12b54259163f02cb9ea1b26c13fb9bc54a3e620 Mon Sep 17 00:00:00 2001
+From: Alan Wu <XrXr@users.noreply.github.com>
+Date: Tue, 15 Oct 2019 10:31:17 -0400
+Subject: [PATCH 2/4] work around hashing inconsistency
+
+---
+ ruby/ext/google/protobuf_c/upb.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/ruby/ext/google/protobuf_c/upb.c b/ruby/ext/google/protobuf_c/upb.c
+index a65264afb..b6a48b6ff 100644
+--- a/ruby/ext/google/protobuf_c/upb.c
++++ b/ruby/ext/google/protobuf_c/upb.c
+@@ -1610,9 +1610,15 @@ bool upb_strtable_insert3(upb_strtable *t, const char *k, size_t len,
+   return true;
+ }
+ 
++#include <stdlib.h>
++
+ bool upb_strtable_lookup2(const upb_strtable *t, const char *key, size_t len,
+                           upb_value *v) {
+   uint32_t hash = upb_murmur_hash2(key, len, 0);
++  void *buffer = malloc(len);
++  memcpy(buffer, key, len);
++  hash = upb_murmur_hash2(buffer, len, 0);
++  free(buffer);
+   return lookup(&t->t, strkey2(key, len), v, hash, &streql);
+ }
+ 
+-- 
+2.19.1
+
