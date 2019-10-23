@@ -18,6 +18,11 @@ if [[ ! -f $script_path ]]; then
 fi
 
 repository() {
+  git clone --depth 1 "${1}" "${2-repo}"
+  pushd "${2-repo}"
+}
+
+full-repository() {
   git clone --single-branch "${1}" "${2-repo}"
   pushd "${2-repo}"
 }
