@@ -1,0 +1,6 @@
+slow:The Shopify build mentions Shopify in the version
+slow:The Shopify build is native by default
+slow:The Shopify build includes Graal
+slow:The Shopify build can run native
+slow:The Shopify build can run JVM
+slow:The Shopify build includes libgraal
