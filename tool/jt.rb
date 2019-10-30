@@ -129,7 +129,7 @@ module Utilities
       raise unless /"name": "tools",.+?"version": "(\h{40})"/m =~ suite
       $1
     when :repository
-      raw_sh('git', 'rev-parse', 'HEAD', capture: true, no_print_cmd: true, chdir: File.join(TRUFFLERUBY_DIR, '..', 'graal')).chomp
+      raw_sh('git', 'rev-parse', 'HEAD', capture: true, no_print_cmd: true, chdir: File.join(TRUFFLERUBY_DIR, '..', 'graal-shopify')).chomp
     else
       raise ArgumentError, from: from
     end
@@ -1879,7 +1879,7 @@ EOS
 
   def checkout_enterprise_revision
     ee_path = File.expand_path File.join(TRUFFLERUBY_DIR, '..', 'graal-enterprise')
-    graal_path = File.expand_path File.join(TRUFFLERUBY_DIR, '..', 'graal')
+    graal_path = File.expand_path File.join(TRUFFLERUBY_DIR, '..', 'graal-shopify')
     unless File.directory?(ee_path)
       github_ee_url = 'https://github.com/graalvm/graal-enterprise.git'
       bitbucket_ee_url = raw_sh('mx', 'urlrewrite', github_ee_url, capture: true).chomp
@@ -1905,7 +1905,7 @@ EOS
   end
 
   def bootstrap_toolchain
-    sulong_home = File.join(TRUFFLERUBY_DIR, '..', 'graal', 'sulong')
+    sulong_home = File.join(TRUFFLERUBY_DIR, '..', 'graal-shopify', 'sulong')
     # clone the graal repository if it is missing
     mx 'sversions' unless File.directory? sulong_home
     graal_version = get_truffle_version from: :repository
