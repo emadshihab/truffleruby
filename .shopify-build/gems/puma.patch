@@ -1,0 +1,13 @@
+diff --git a/test/helper.rb b/test/helper.rb
+index f6b402c6..98a46e11 100644
+--- a/test/helper.rb
++++ b/test/helper.rb
+@@ -64,7 +64,7 @@ module TimeoutEveryTestCase
+   end
+
+   def run(*)
+-    ::Timeout.timeout(Puma.jruby? ? 120 : 60, TestTookTooLong) { super }
++    ::Timeout.timeout(Puma.jruby? ? 120 : 120, TestTookTooLong) { super }
+   end
+ end
+

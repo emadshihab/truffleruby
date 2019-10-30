@@ -97,6 +97,10 @@ shared:
     <<: *truffle_run
     label: Run snappy tests
     run: .shopify-build/test-gem.sh snappy
+  puma_test: &puma_test
+    <<: *truffle_run
+    label: Run puma tests
+    run: .shopify-build/test-gem.sh puma
   statsd_instrument_test: &statsd_instrument_test
     <<: *truffle_run
     label: Run statsd-instrument tests
@@ -138,6 +142,7 @@ pipelines:
       - <<: *nokogiri_test
       - <<: *nokogumbo_test
       - <<: *snappy_test
+      - <<: *puma_test
       - <<: *statsd_instrument_test
       - <<: *protobuf_test
       - <<: *storefront_renderer
@@ -178,6 +183,7 @@ pipelines:
       - <<: *nokogiri_test
       - <<: *nokogumbo_test
       - <<: *snappy_test
+      - <<: *puma_test
       - <<: *statsd_instrument_test
       - <<: *protobuf_test
       - <<: *storefront_renderer
