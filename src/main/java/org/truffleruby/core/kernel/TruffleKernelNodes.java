@@ -194,29 +194,4 @@ public abstract class TruffleKernelNodes {
 
     }
 
-    @CoreMethod(names = "hidden_variable_get", onSingleton = true, required = 2)
-    public abstract static class HiddenVariableGetNode extends CoreMethodArrayArgumentsNode {
-
-        @Specialization
-        protected Object hiddenVariableGet(DynamicObject object, Object identifier,
-                                           @Cached ObjectIVarGetNode iVarGetNode) {
-            return iVarGetNode.executeIVarGet(object, identifier);
-        }
-
-        @Specialization(guards = "!isDynamicObject(object)")
-        protected Object hiddenVariableGetPrimitive(Object object, Object identifier) {
-            return nil();
-        }
-    }
-
-    @CoreMethod(names = "hidden_variable_set", onSingleton = true, required = 3)
-    public abstract static class HiddenVariableSetNode extends CoreMethodArrayArgumentsNode {
-
-        @Specialization
-        protected Object hiddenVariableSet(DynamicObject object, Object identifier, Object value,
-                                           @Cached ObjectIVarSetNode iVarSetNode) {
-            return iVarSetNode.executeIVarSet(object, identifier, value);
-        }
-    }
-
 }
