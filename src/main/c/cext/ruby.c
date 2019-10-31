@@ -2926,7 +2926,7 @@ void *rb_check_typeddata(VALUE value, const rb_data_type_t *data_type) {
 }
 
 const rb_data_type_t *RTYPEDDATA_TYPE(VALUE value) {
-  return rb_tr_hidden_variable_get(value, "data_type");
+  return rb_tr_object_hidden_var_get(value, "data_type");
 }
 
 bool RTYPEDDATA_P(VALUE value) {
