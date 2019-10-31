@@ -295,10 +295,6 @@ module Utilities
     @git_branch ||= `GIT_DIR="#{TRUFFLERUBY_DIR}/.git" git rev-parse --abbrev-ref HEAD`.strip
   end
 
-  def igv_running?
-    `ps ax`.include?('idealgraphvisualizer')
-  end
-
   def no_gem_vars_env
     {
       'TRUFFLERUBY_RESILIENT_GEM_HOME' => nil,
@@ -783,8 +779,7 @@ module Commands
         vm_args << '--vm.Dgraal.TraceTruffleCompilation=true'
       when '--igv', '--igv-full'
         truffleruby_compiler!
-        vm_args << (arg == '--igv-full' ? '--vm.Dgraal.Dump=:2' : '--vm.Dgraal.Dump=TruffleTree,PartialEscape:2')
-        vm_args << '--vm.Dgraal.PrintGraphFile=true' unless igv_running?
+        vm_args << (arg == '--igv-full' ? '--vm.Dgraal.Dump=Truffle:2' : '--vm.Dgraal.Dump=Truffle:1')
         vm_args << '--vm.Dgraal.PrintBackendCFG=false'
       when '--exec'
         options[:use_exec] = true
@@ -1919,13 +1914,15 @@ EOS
       FileUtils.cp_r toolchain_graalvm + '/.', destination
     end
 
-    # leave only 4 newest built toolchains
-    caches = Dir.glob(File.join(toolchain_dir, '*'))
-    caches.delete destination
-    oldest = caches.sort_by { |f| File.ctime f }[0...-4]
-    unless oldest.empty?
+    # mark as used
+    FileUtils.touch destination
+    # leave only 4 built toolchains which were used last
+    caches = Dir.
+        glob(File.join(toolchain_dir, '*')).
+        sort_by { |cached_toolchain_path| File.mtime cached_toolchain_path }
+    unless (oldest = caches[0...-4]).empty?
       puts "Removing old cached toolchains: #{oldest.join ' '}"
-      File.rm_rf oldest
+      FileUtils.rm_rf oldest
     end
 
     destination
