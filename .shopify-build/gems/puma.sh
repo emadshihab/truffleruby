@@ -1,6 +1,5 @@
 repository https://github.com/puma/puma.git puma
 apply-patch puma.patch
-apply-patch puma-deadline.patch
 
 if ruby -e 'exit(Gem::Version.new(Gem::VERSION) < Gem::Version.new("3.0.6") ? 0 : 1)'; then gem update --system --no-document; fi
 bundle install
