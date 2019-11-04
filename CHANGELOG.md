@@ -12,6 +12,9 @@ Bug fixes:
 * Match out of range ArgumentError message with MRI (#1774, @rafaelfranca)
 * Raise Encoding::CompatibilityError with incompatible encodings on regexp (#1775, @rafaelfranca).
 * Fixed interactions between attributes and instance variables in structs (#1776, @chrisseaton).
+* Coercion fixes for `TCPServer.new` (#1780, @XrXr)
+* Fix `Float#<=>` not calling `coerce` when `other` argument responds to it (#1783, @XrXr).
+* Do not warn / crash when requiring a file that sets and trigger autoload on itself (#1779, @XrXr).
 
 Compatibility:
 
@@ -20,6 +23,7 @@ Compatibility:
 Performance:
 
 * Use a smaller limit for identity-based inline caches to improve warmup by avoiding too many deoptimizations.
+* Long array strategies now correctly declare that they accept Integers, reducing deoptimisations and proomotions to Object arrays.
 
 # 19.3.0
 
