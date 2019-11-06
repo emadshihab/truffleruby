@@ -15,10 +15,18 @@ Bug fixes:
 * Coercion fixes for `TCPServer.new` (#1780, @XrXr)
 * Fix `Float#<=>` not calling `coerce` when `other` argument responds to it (#1783, @XrXr).
 * Do not warn / crash when requiring a file that sets and trigger autoload on itself (#1779, @XrXr).
+* Strip trailing whitespaces when BigDecimal gets a string (#1796, @XrXr).
+* Default `close_others` in `Process.exec` to false like Ruby 2.6 (#1798, @XrXr).
+* Don't clone methods when setting method to the same visibility (#1794, @XrXr).
+* BigDecimal() deal with large rationals precisely (#1797, @XrXr).
 
 Compatibility:
 
 * Implemented `String#start_with?(Regexp)` (#1771, @zhublik).
+* Implemented `rb_utf8_str_new`, `rb_utf8_str_new_cstr`, `rb_utf8_str_new_static` (#1788, @chrisseaton).
+* Implemented the `unit` argument of `Time.at` (#1791, @XrXr).
+* Implemented `keyword_init: true` for `Struct.new` (#1789, @XrXr).
+* Implemented `MatchData#dup` (#1792, @XrXr).
 
 Performance:
 
