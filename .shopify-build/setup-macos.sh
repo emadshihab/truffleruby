@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Legacy Xcode setup
+
+export SDKROOT=`xcrun --show-sdk-path`
+
 # Dependencies needed for building TruffleRuby
 
 brew install \
