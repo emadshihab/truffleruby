@@ -10,7 +10,7 @@ containers:
         PIPA_PIPELINE_TEMPLATE: dockerfile
         PIPA_DOCKERFILE: .shopify-build/Dockerfile.debian
   macos:
-    anka: macos-xcode10.3:latest
+    anka: macos-xcode11.1:latest
   upload:
     environment: upload
     includes_source: false
