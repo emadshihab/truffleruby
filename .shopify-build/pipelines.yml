@@ -151,6 +151,11 @@ pipelines:
       - <<: *protobuf_test
       - <<: *storefront_renderer
       - <<: *zeitwerk_test
+      - <<: *truffle_run
+        label: Run mysql2 basic tests
+        services:
+          mysql: '5.7'
+        run: .shopify-build/test-gem.sh mysql2
       - block: Produce a tarball artifact
       - <<: *truffle_run
         label: Package
