@@ -105,10 +105,6 @@ shared:
     <<: *truffle_run
     label: Run statsd-instrument tests
     run: .shopify-build/test-gem.sh statsd-instrument
-  storefront_renderer: &storefront_renderer
-    <<: *truffle_run
-    label: Install storefront_renderer
-    run: .shopify-build/test-gem.sh storefront-renderer
   zeitwerk_test: &zeitwerk_test
     <<: *truffle_run
     label: Run zeitwerk tests
@@ -149,13 +145,62 @@ pipelines:
       - <<: *puma_test
       - <<: *statsd_instrument_test
       - <<: *protobuf_test
-      - <<: *storefront_renderer
       - <<: *zeitwerk_test
       - <<: *truffle_run
         label: Run mysql2 basic tests
         services:
           mysql: '5.7'
         run: .shopify-build/test-gem.sh mysql2
+      - timeout: 30m
+        services:
+          mysql: '5.7'
+          memcached: 'alpine'
+          redis:
+            image: redis:alpine
+            command: redis-server
+          toxiproxy:
+            image: shopify/toxiproxy
+        env:
+          TOXIPROXY_HOST: 'toxiproxy'
+          REDIS_SERVER: redis:6379
+        label: Install storefront_renderer
+        cache:
+          - path: .shopify-build/build
+            required: true
+            inherited: false
+            upload: false
+            scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
+          - path: storefront-renderer
+            inherited: false
+            scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
+        run: .shopify-build/test-gem.sh storefront-renderer-install
+      - wait
+      - timeout: 30m
+        cache:
+          - path: .shopify-build/build
+            required: true
+            inherited: false
+            upload: false
+            scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
+          - path: storefront-renderer
+            required: true
+            inherited: false
+            upload: false
+            scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
+        services:
+          mysql: '5.7'
+          memcached: 'alpine'
+          redis:
+            image: redis:alpine
+            command: redis-server
+          toxiproxy:
+            image: shopify/toxiproxy
+        env:
+          TOXIPROXY_HOST: 'toxiproxy'
+          REDIS_SERVER: redis:6379
+        label: Run storefront_renderer tests
+        run: .shopify-build/test-gem.sh storefront-renderer-test-1
+      - wait
       - block: Produce a tarball artifact
       - <<: *truffle_run
         label: Package
@@ -196,7 +241,6 @@ pipelines:
       - <<: *puma_test
       - <<: *statsd_instrument_test
       - <<: *protobuf_test
-      - <<: *storefront_renderer
       - <<: *zeitwerk_test
       - block: Produce a tarball artifact
       - <<: *truffle_run
