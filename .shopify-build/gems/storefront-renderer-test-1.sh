@@ -7,4 +7,4 @@ sudo apt-get install -y mysql-client
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/build/truffleruby-shopify/.shopify-build/build/jre/languages/ruby/lib/cext/
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/build/truffleruby-shopify/.shopify-build/build/jre/languages/llvm/native/lib/
 
-bundle exec rake db:load test_leaks test
+bundle exec rake db:load test:unit test:shared test:liquid
