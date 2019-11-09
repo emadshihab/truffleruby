@@ -176,6 +176,7 @@ pipelines:
         run: .shopify-build/test-gem.sh storefront-renderer-install
       - wait
       - timeout: 30m
+        high_concurrency: true
         cache:
           - path: .shopify-build/build
             required: true
