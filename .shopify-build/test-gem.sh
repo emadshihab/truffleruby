@@ -22,16 +22,19 @@ fi
 repository() {
   git clone --depth 1 "${1}" "${2-repo}"
   pushd "${2-repo}"
+  git log -n 1
 }
 
 repository-tag() {
   git clone --depth 1 --branch "${2}" "${1}" "${3-repo}"
   pushd "${3-repo}"
+  git log -n 1
 }
 
 full-repository() {
   git clone --single-branch "${1}" "${2-repo}"
   pushd "${2-repo}"
+  git log -n 1
 }
 
 apply-patch() {
