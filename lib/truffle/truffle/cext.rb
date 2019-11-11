@@ -13,6 +13,7 @@ module Truffle::CExt
 
   DATA_HOLDER = Object.new
   DATA_MEMSIZER = Object.new
+  ALLOCATOR_FUNC = Object.new
   RB_TYPE = Object.new
 
   extend self
@@ -368,6 +369,14 @@ module Truffle::CExt
 
   def RB_TYPE_P(value, type)
     rb_type(value) == type
+  end
+
+  def RTYPEDDATA_P(value)
+    if hidden_variable_get(value, DATA_HOLDER) && hidden_variable_get(value, :data_type)
+      true
+    else
+      false
+    end
   end
 
   def rb_check_type(value, type)
