@@ -470,16 +470,9 @@ class SignalException < Exception
     super(name_with_prefix)
   end
 
-  private
-
-  def reached_top_level
-    banned = ['VTALRM']
-    if !TruffleRuby.native?
-      banned.concat(['FPE', 'ILL', 'SEGV', 'USR1', 'QUIT'])
-    end
-    banned.map! { |name| Signal::Names[name] }
-    if banned.include?(@signo)
-      warn "not acting on top level SignalException for SIG#{Signal::Numbers[@signo]} as it is VM reserved"
+  private def reached_top_level
+    if @signo == Signal::Names['VTALRM']
+      warn 'not acting on top level SignalException for SIGVTALRM as it is VM reserved'
       return
     end
 
@@ -487,6 +480,7 @@ class SignalException < Exception
       Signal.trap(@signo, 'SYSTEM_DEFAULT')
     rescue ArgumentError
       # some signals are reserved but we can raise them anyways
+      nil
     end
     Truffle::POSIX.raise_signal(@signo)
   end

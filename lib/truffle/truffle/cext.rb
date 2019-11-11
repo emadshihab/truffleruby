@@ -13,7 +13,7 @@ module Truffle::CExt
 
   DATA_HOLDER = Object.new
   DATA_MEMSIZER = Object.new
-  ALLOCATOR_FUNC = Object.new
+  RB_TYPE = Object.new
 
   extend self
 
@@ -300,6 +300,27 @@ module Truffle::CExt
     # TODO CS 23-Jul-16 we could do with making this a kind of specialising case
     # that puts never seen cases behind a transfer
 
+    value_class = value.class
+    type = hidden_variable_get(value_class, RB_TYPE)
+    type ||= hidden_variable_set(value_class, RB_TYPE, rb_tr_find_type(value))
+    rb_tr_cached_type(value, type)
+  end
+
+  def rb_tr_cached_type(value, type)
+    if type == T_NONE
+      if hidden_variable_get(value, DATA_HOLDER)
+        T_DATA
+      else
+        T_OBJECT
+      end
+    elsif type == T_FIXNUM
+      Truffle::Type.fits_into_long?(value) ? T_FIXNUM : T_BIGNUM
+    else
+      type
+    end
+  end
+
+  def rb_tr_find_type(value)
     case value
     when Class
       T_CLASS
@@ -332,17 +353,14 @@ module Truffle::CExt
     when Symbol
       T_SYMBOL
     when Integer
-      Truffle::Type.fits_into_long?(value) ? T_FIXNUM : T_BIGNUM
+      #rb_tr_cached_type. The final type must be calculated for each number.
+      T_FIXNUM
     when Time
       T_DATA
     when Data
       T_DATA
     when BasicObject
-      if hidden_variable_get(value, DATA_HOLDER)
-        T_DATA
-      else
-        T_OBJECT
-      end
+      T_NONE
     else
       raise "unknown type #{value.class}"
     end
@@ -350,14 +368,6 @@ module Truffle::CExt
 
   def RB_TYPE_P(value, type)
     rb_type(value) == type
-  end
-
-  def RTYPEDDATA_P(value)
-    if hidden_variable_get(value, DATA_HOLDER) && hidden_variable_get(value, :data_type)
-      true
-    else
-      false
-    end
   end
 
   def rb_check_type(value, type)
@@ -1179,11 +1189,11 @@ module Truffle::CExt
   end
 
   def rb_ivar_get(object, name)
-    TrufflePrimitive.object_ivar_get object, name.to_sym
+    TrufflePrimitive.object_ivar_get object, name
   end
 
   def rb_ivar_set(object, name, value)
-    TrufflePrimitive.object_ivar_set object, name.to_sym, value
+    TrufflePrimitive.object_ivar_set object, name, value
   end
 
   def rb_special_const_p(object)
@@ -1533,13 +1543,12 @@ module Truffle::CExt
   end
 
   def rb_block_call(object, method, args, func, data)
-    outer_self = self
     object.__send__(method, *args) do |*block_args|
       TrufflePrimitive.cext_unwrap(TrufflePrimitive.call_with_c_mutex(func, [
           TrufflePrimitive.cext_wrap(block_args.first),
           data,
           block_args.size, # argc
-          outer_self.RARRAY_PTR(block_args), # argv
+          Truffle::CExt.RARRAY_PTR(block_args), # argv
           nil, # blockarg
       ]))
     end
