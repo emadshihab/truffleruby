@@ -19,10 +19,17 @@ Bug fixes:
 * Default `close_others` in `Process.exec` to false like Ruby 2.6 (#1798, @XrXr).
 * Don't clone methods when setting method to the same visibility (#1794, @XrXr).
 * BigDecimal() deal with large rationals precisely (#1797, @XrXr).
+* Make it possible to call `instance_exec` with `rb_block_call` (#1802, @XrXr).
+* Struct.new: check for duplicate members (#1803, @XrXr).
+* `Process::Status#to_i` return raw `waitpid(2)` status (#1800, @XrXr).
+* Process#exec: set close-on-exec to false for fd redirection (#1805, @XrXr, @rafaelfranca).
+* Building C extensions should now work with frozen string literals (#1786).
+* Keep the Truffle working directory in sync with the native working directory.
 
 Compatibility:
 
 * Implemented `String#start_with?(Regexp)` (#1771, @zhublik).
+* Various improvements to `SignalException` and signal handling (#1790, @XrXr).
 * Implemented `rb_utf8_str_new`, `rb_utf8_str_new_cstr`, `rb_utf8_str_new_static` (#1788, @chrisseaton).
 * Implemented the `unit` argument of `Time.at` (#1791, @XrXr).
 * Implemented `keyword_init: true` for `Struct.new` (#1789, @XrXr).
@@ -32,6 +39,9 @@ Performance:
 
 * Use a smaller limit for identity-based inline caches to improve warmup by avoiding too many deoptimizations.
 * Long array strategies now correctly declare that they accept Integers, reducing deoptimisations and proomotions to Object arrays.
+* Enable inline caching of symbol conversion for `rb_iv_get` and `rb_iv_set`.
+* `rb_type` information is now cached on classes as a hidden variable to improve performance.
+* Change to using thread local buffers for socket calls to reduce allocations.
 
 # 19.3.0
 

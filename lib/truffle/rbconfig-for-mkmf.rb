@@ -1,3 +1,5 @@
+# frozen-string-literal: false
+#
 # Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved. This
 # code is released under a tri EPL/GPL/LGPL license. You can use it,
 # redistribute it and/or modify it under the terms of the:
@@ -58,6 +60,11 @@ if Truffle::Boot.get_option 'building-core-cexts'
   warnflags << '-Werror' # Make sure there are no warnings in core C extensions
 else
   libtruffleruby = "#{cext_dir}/libtruffleruby.#{dlext}"
+
+  # GR-19453: workaround for finding libc++.so when using NFI on the library since the toolchain does not pass -rpath automatically
+  rpath_libcxx = " -rpath #{File.expand_path("../../lib", RbConfig::CONFIG['CC'])}"
+  ldflags << rpath_libcxx
+  dldflags << rpath_libcxx
 end
 
 # Link to libtruffleruby by absolute path
