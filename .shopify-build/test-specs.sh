@@ -4,6 +4,8 @@ set -eo pipefail
 
 if [[ $(uname) == "Darwin" ]]; then
   source .shopify-build/setup-macos.sh
+else
+  source .shopify-build/setup-linux.sh
 fi
 
 unset GEM_HOME GEM_PATH GEM_ROOT RUBY_ENGINE RUBY_ROOT RUBY_VERSION
