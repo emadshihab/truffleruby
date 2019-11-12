@@ -1905,7 +1905,7 @@ EOS
     build_dir = mx(*mx_args, 'graalvm-home', capture: true).lines.last.chomp
 
     dest = "#{TRUFFLERUBY_DIR}/mxbuild/#{name}"
-    dest_ruby = "#{dest}/#{language_dir}/ruby"
+    dest_ruby = dest # install the full GraalVM "#{dest}/#{language_dir}/ruby"
     dest_bin = "#{dest_ruby}/bin"
     FileUtils.rm_rf dest
     FileUtils.cp_r build_dir, dest
