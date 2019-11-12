@@ -34,4 +34,8 @@ describe "The Shopify build" do
     ruby_exe(nil, args: '--jvm --vm.XX:+UseJVMCINativeLibrary -e 14').should_not include('image not found')
   end
 
+  it "includes coverage" do
+    ruby_exe(nil, args: '--coverage -e 14').should include('Code coverage histogram')
+  end
+
 end
