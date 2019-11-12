@@ -19,6 +19,8 @@ containers:
       env:
         PIPA_PIPELINE_TEMPLATE: dockerfile
         PIPA_DOCKERFILE: .shopify-build/Dockerfile.upload
+  packagecloud:
+    docker: gcr.io/shopify-docker-images/ci/ruby26:Ruby-2.6.5-Node-10.16.3-Yarn-1.13.0
 
 shared:
   truffle_run: &truffle_run
@@ -208,6 +210,14 @@ pipelines:
         run: .shopify-build/package.sh
         artifact_paths:
           - .shopify-build/artifacts
+      - block: Make and upload Debian package to Package Cloud
+      - label: "make and publish debian package out of build/"
+        container: packagecloud
+        ejson: .shopify-build/package_cloud.ejson
+        <<: *truffle_run
+        run:
+          - gem install package_cloud
+          - .shopify-build/make-debian-package.sh
 
   truffleruby-shopify-macos:
     default_container: macos
