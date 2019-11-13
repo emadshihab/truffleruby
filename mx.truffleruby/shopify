@@ -1,6 +1,3 @@
-DYNAMIC_IMPORTS=/vm,/substratevm,/sulong,/compiler,/tools
-COMPONENTS=TruffleRuby,SubstrateVM,LibGraal
-DISABLE_INSTALLABLES=true
-LIBGRAAL=true
-EXCLUDE_COMPONENTS=nju
-FORCE_BASH_LAUNCHERS=polyglot,lli,native-image,graalvm-native-clang++,native-image-configure,graalvm-native-clang,gu,graalvm-native-ld
+DYNAMIC_IMPORTS=/vm,/compiler,/substratevm
+COMPONENTS=TruffleRuby,GraalVM compiler,SubstrateVM,LibGraal
+NATIVE_IMAGES=truffleruby,lib:jvmcicompiler

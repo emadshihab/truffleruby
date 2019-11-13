@@ -9,7 +9,7 @@ suite = {
                 "name": "tools",
                 "subdir": True,
                 # version must always be equal to the version of the "sulong" import below
-                "version": "95ebf197a6fc312acaba2fd38a4f36738cce2258",
+                "version": "0c01efd4c243edc78f586fb61178436ed5f3f0fe",
                 "urls": [
                     {"url": "git@github.com:Shopify/graal-shopify.git", "kind": "git"},
                     {"url": "https://curio.ssw.jku.at/nexus/content/repositories/snapshots", "kind": "binary"},
@@ -19,7 +19,7 @@ suite = {
                 "name": "sulong",
                 "subdir": True,
                 # version must always be equal to the version of the "tools" import above
-                "version": "95ebf197a6fc312acaba2fd38a4f36738cce2258",
+                "version": "0c01efd4c243edc78f586fb61178436ed5f3f0fe",
                 "urls": [
                     {"url": "git@github.com:Shopify/graal-shopify.git", "kind": "git"},
                     {"url": "https://curio.ssw.jku.at/nexus/content/repositories/snapshots", "kind": "binary"},
@@ -110,6 +110,7 @@ suite = {
                 "test/truffle/ecosystem/hello-world",
                 "test/truffle/ecosystem/rails-app",
                 "test/truffle/offline",
+                "tool/docker",
                 "rubyspec_temp",
             ]
         },
