@@ -113,10 +113,20 @@ shared:
     run: .shopify-build/test-gem.sh zeitwerk
 
 pipelines:
+
+  truffleruby-shopify-lint:
+    default_container: debian
+    steps:
+      - label: Run lint checks
+        timeout: 30m
+        git:
+          history: shallow
+        run: .shopify-build/lint.sh
+
   truffleruby-shopify-debian:
     default_container: debian
     steps:
-      - label: "Build TruffleRuby on Debian"
+      - label: Build TruffleRuby on Debian
         high_concurrency: true
         timeout: 90m
         git:
@@ -125,9 +135,13 @@ pipelines:
           - path: .shopify-build/build
             inherited: false
             scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
-        run:
-          - .shopify-build/build.sh
+        run: .shopify-build/build.sh
       - wait
+      - label: Run lint checks
+        timeout: 30m
+        git:
+          history: shallow
+        run: .shopify-build/lint.sh
       - <<: *language_specs
       - <<: *core_specs
       - <<: *library_specs
@@ -230,8 +244,7 @@ pipelines:
           - path: .shopify-build/build
             inherited: false
             scope: "platform-${SHOPIFY_BUILD_PIPELINE_SLUG}"
-        run:
-          - .shopify-build/build.sh
+        run: .shopify-build/build.sh
       - wait
       - <<: *language_specs
       - <<: *core_specs
