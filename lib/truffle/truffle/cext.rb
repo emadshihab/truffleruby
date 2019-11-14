@@ -1326,7 +1326,7 @@ module Truffle::CExt
 
   def rb_undef_alloc_func(ruby_class)
     ruby_class.singleton_class.send(:undef_method, :__allocate__)
-  rescue NameError
+  rescue NameError # rubocop:disable Lint/HandleExceptions
     # it's fine to call this on a class that doesn't have an allocator
   else
     hidden_variable_set(ruby_class.singleton_class, ALLOCATOR_FUNC, nil)
