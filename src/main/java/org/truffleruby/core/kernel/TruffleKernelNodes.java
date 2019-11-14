@@ -28,8 +28,6 @@ import org.truffleruby.language.globals.WriteSimpleGlobalVariableNode;
 import org.truffleruby.language.loader.CodeLoader;
 import org.truffleruby.language.loader.FileLoader;
 import org.truffleruby.language.methods.DeclarationContext;
-import org.truffleruby.language.objects.ObjectIVarGetNode;
-import org.truffleruby.language.objects.ObjectIVarSetNode;
 import org.truffleruby.language.threadlocal.FindThreadAndFrameLocalStorageNode;
 import org.truffleruby.language.threadlocal.FindThreadAndFrameLocalStorageNodeGen;
 import org.truffleruby.parser.ParserContext;

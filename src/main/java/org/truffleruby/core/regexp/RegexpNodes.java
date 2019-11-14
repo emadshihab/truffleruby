@@ -36,7 +36,6 @@ import org.truffleruby.builtins.CoreModule;
 import org.truffleruby.builtins.NonStandard;
 import org.truffleruby.builtins.Primitive;
 import org.truffleruby.builtins.PrimitiveArrayArgumentsNode;
-import org.truffleruby.core.cast.ToEncodingNode;
 import org.truffleruby.core.array.ArrayStrategy;
 import org.truffleruby.core.cast.ToStrNode;
 import org.truffleruby.core.encoding.EncodingNodes;
