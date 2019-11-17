@@ -1967,16 +1967,21 @@ EOS
   end
 
   def rubocop(*args)
-    gem_home = "#{gem_test_pack}/rubocop-gems"
-    env = {
-      'GEM_HOME' => gem_home,
-      'GEM_PATH' => gem_home,
-      'PATH' => "#{gem_home}/bin:#{ENV['PATH']}"
-    }
+    testpack = args.delete('--testpack')
     if args.empty? or args.all? { |arg| arg.start_with?('-') }
       args += RUBOCOP_INCLUDE_LIST
     end
-    sh env, 'ruby', "#{gem_home}/bin/rubocop", *args
+    if testpack
+      gem_home = "#{gem_test_pack}/rubocop-gems"
+      env = {
+        'GEM_HOME' => gem_home,
+        'GEM_PATH' => gem_home,
+        'PATH' => "#{gem_home}/bin:#{ENV['PATH']}"
+      }
+      sh env, 'ruby', "#{gem_home}/bin/rubocop", *args
+    else
+      sh 'rubocop', '_0.66.0_', *args
+    end
   end
 
   def command_format(*args)
@@ -2081,7 +2086,7 @@ EOS
             new_content << line
           end
         else
-          looking = line.match?(/^ *@(Specialization|Fallback|CreateCast)/)
+          looking = /^ *@(Specialization|Fallback|CreateCast)/ =~ line
           new_content << line
           if looking
             braces = count_braces.(line)
@@ -2099,8 +2104,14 @@ EOS
   end
 
   def lint(*args)
+    testpack = args.delete('--testpack')
+
     check_filename_length
-    rubocop
+
+    rubocop_args = []
+    rubocop_args << '--testpack' if testpack
+    rubocop(*rubocop_args)
+
     sh 'tool/lint.sh'
     mx 'gate', '--tags', 'style'
 

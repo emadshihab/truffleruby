@@ -10,7 +10,6 @@
 package org.truffleruby.language.exceptions;
 
 import org.truffleruby.Layouts;
-import org.truffleruby.core.CoreLibrary;
 import org.truffleruby.core.cast.IntegerCastNode;
 import org.truffleruby.core.kernel.AtExitManager;
 import org.truffleruby.language.RubyNode;
