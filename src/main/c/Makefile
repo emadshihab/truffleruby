@@ -35,8 +35,8 @@ EXTCONF_DEPS := $(BASIC_EXTCONF_DEPS) cext/libtruffleruby.$(DLEXT)
 IF_EXTCONF_FAIL := ( echo "`pwd`/extconf.rb failed:" 1>&2 && cat mkmf.log && false )
 
 all: cext/libtruffleruby.$(DLEXT) openssl/openssl.$(DLEXT) zlib/zlib.$(DLEXT) \
-			psych/psych.$(DLEXT) syslog/syslog.$(DLEXT) nkf/nkf.$(DLEXT) \
-			etc/etc.$(DLEXT) rbconfig-sizeof/sizeof.$(DLEXT)
+			psych/psych.$(DLEXT) ripper/ripper.$(DLEXT) syslog/syslog.$(DLEXT) \
+			nkf/nkf.$(DLEXT) etc/etc.$(DLEXT) rbconfig-sizeof/sizeof.$(DLEXT)
 
 clean: clean_cexts clean_truffleposix
 
@@ -48,6 +48,7 @@ clean_cexts:
 	$(Q) rm -f openssl/Makefile openssl/*.o openssl/openssl.$(DLEXT)
 	$(Q) rm -f zlib/Makefile zlib/*.o zlib/zlib.$(DLEXT)
 	$(Q) rm -f psych/Makefile psych/*.o psych/yaml/*.o psych/psych.$(DLEXT)
+	$(Q) rm -f ripper/Makefile ripper/*.o ripper/ripper.$(DLEXT)
 	$(Q) rm -f syslog/Makefile syslog/*.o syslog/syslog.$(DLEXT)
 	$(Q) rm -f nkf/Makefile nkf/*.o nkf/nkf.$(DLEXT)
 	$(Q) rm -f etc/Makefile etc/*.o etc/etc.$(DLEXT) etc/constdefs.h
@@ -81,6 +82,13 @@ zlib/Makefile: zlib/extconf.rb $(EXTCONF_DEPS)
 
 zlib/zlib.$(DLEXT): zlib/Makefile zlib/zlib.c
 	$(Q) cd zlib && $(MAKE) $(MKMF_MAKEFILE_SUBPROCESS_FLAGS)
+
+# ripper
+ripper/Makefile: ripper/extconf.rb $(EXTCONF_DEPS)
+	$(Q) cd ripper && $(RUBY) extconf.rb || $(IF_EXTCONF_FAIL)
+
+ripper/ripper.$(DLEXT): ripper/Makefile ripper/ripper.c
+	$(Q) cd ripper && $(MAKE) $(MKMF_MAKEFILE_SUBPROCESS_FLAGS)
 
 # syslog
 syslog/Makefile: syslog/extconf.rb $(EXTCONF_DEPS)
